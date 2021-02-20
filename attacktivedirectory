@@ -1,3 +1,6 @@
+
+https://tryhackme.com/room/attacktivedirectory
+
 >nmap -F -A -Pn 10.10.144.202
         Starting Nmap 7.60 ( https://nmap.org ) at 2021-02-20 07:57 GMT
         Nmap scan report for spookysec.local (10.10.144.202)
