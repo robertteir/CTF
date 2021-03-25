@@ -74,20 +74,25 @@ Get-Service adws,kdc,netlogon,dns
 
 New-ADUser -Name "admin" `
 -PasswordNeverExpires $true `
--AccountPassword "*******" `
+-AccountPassword "***********" `
 -PasswordNeverExpires $true
 
 New-ADUser -Name "user" `
 -PasswordNeverExpires $true `
--AccountPassword "*******" `
+-AccountPassword "***********" `
 -PasswordNeverExpires $true
 
-Add-ADGroupMember -Identity "BUILTIN\Domain Admin" -Members admin
+Add-ADGroupMember -Identity "goldencheesburger\Domain Admins" -Members admin
 
 New-ADComputer -Name "golden-cl-01" -SamAccountName "golden-cl-01"
 
+Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
+Set-MpPreference -DisableIntrusionPreventionSystem $true -DisableIOAVProtection $true -DisableRealtimeMonitoring $true -DisableScriptScanning $true -EnableControlledFolderAccess Disabled -EnableNetworkProtection AuditMode -Force -MAPSReporting Disabled -SubmitSamplesConsent NeverSend
+
 Deploy client:
-ADdd-computer –domainname "goldencheesburger.com" -restart
+Add-computer –domainname "goldencheesburger.com" -restart
+
+## Resrart ##
 
 New-Item -Path 'C:\temp' -ItemType Directory
 New-Item -Path 'C:\temp\chees.ps1' -ItemType File
@@ -98,3 +103,6 @@ Register-ScheduledTask -Action $action -Trigger $trigger -TaskName "Chees" -Desc
 
 Add-LocalGroupMember -Group "Administrators" "goldencheesburger\Domain Admins"
 Add-LocalGroupMember -Group "Remote Desktop Users" "goldencheesburger\Domain Users"
+
+Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
+Set-MpPreference -DisableIntrusionPreventionSystem $true -DisableIOAVProtection $true -DisableRealtimeMonitoring $true -DisableScriptScanning $true -EnableControlledFolderAccess Disabled -EnableNetworkProtection AuditMode -Force -MAPSReporting Disabled -SubmitSamplesConsent NeverSend
