@@ -14,12 +14,16 @@ admin (domain admin)
 user (domain user)
 Administrator (local golden-cl-01)
 
+Access:
+RDP
+WinRM
+
 Tools:
 Mimikazt
 RDP
 PsExec
 
-Prupose:
+Goal:
 Local PrivEsc
 Domain PrivEsc
 Golden Ticket
@@ -29,6 +33,8 @@ Pass-the-ticket
 Silver Ticket
 Skeleton Key
 
+############## Setup ##############
+
 Scenario:
 1) Gain access as user
 2) Local PrivEsc via schedueld task running as golden-cl-01\Administrator
@@ -36,8 +42,6 @@ Scenario:
 4) Dump krbtgt NTLM hash
 5) Issue ticket for Administrator
 6) Brows fileshare on golden-dc-01
-7) Change Passwords for Administartor
-8) Brows fileshare on golden-dc-01
 
 ToDo:
 Deploy Network
