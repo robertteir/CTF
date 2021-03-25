@@ -54,3 +54,47 @@ misc::cmd
 klist
 whoami
 dir \\golden-dc-01\c$
+
+Deploy domain:
+
+Install-ADDSForest `
+-DomainName "goldencheesburger.com" `
+-CreateDnsDelegation:$false ` 
+-DatabasePath "C:\Windows\NTDS" ` 
+-DomainMode "7" ` 
+-DomainNetbiosName "goldencheesburger" ` 
+-ForestMode "7" ` 
+-InstallDns:$true ` 
+-LogPath "C:\Windows\NTDS" ` 
+-NoRebootOnCompletion:$True ` 
+-SysvolPath "C:\Windows\SYSVOL" ` 
+-Force:$true
+
+Get-Service adws,kdc,netlogon,dns
+
+New-ADUser -Name "admin" `
+-PasswordNeverExpires $true `
+-AccountPassword "*******" `
+-PasswordNeverExpires $true
+
+New-ADUser -Name "user" `
+-PasswordNeverExpires $true `
+-AccountPassword "*******" `
+-PasswordNeverExpires $true
+
+Add-ADGroupMember -Identity "BUILTIN\Domain Admin" -Members admin
+
+New-ADComputer -Name "golden-cl-01" -SamAccountName "golden-cl-01"
+
+Deploy client:
+ADdd-computer –domainname "goldencheesburger.com" -restart
+
+New-Item -Path 'C:\temp' -ItemType Directory
+New-Item -Path 'C:\temp\chees.ps1' -ItemType File
+
+$action = New-ScheduledTaskAction -Execute 'Powershell.exe' -Argument '-NoProfile -WindowStyle Hidden -command "c:\temp\chees.ps1"'
+$trigger = New-ScheduledTaskTrigger -Once -At 7am -RepetitionDuration (New-TimeSpan -Days 1) -RepetitionInterval (New-TimeSpan -Minutes 1)
+Register-ScheduledTask -Action $action -Trigger $trigger -TaskName "Chees" -Description "Chees burger delivery"
+
+Add-LocalGroupMember -Group "Administrators" "goldencheesburger\Domain Admins"
+Add-LocalGroupMember -Group "Remote Desktop Users" "goldencheesburger\Domain Users"
