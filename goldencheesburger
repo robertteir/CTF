@@ -2,11 +2,11 @@ Domain:
 goldencheezburger.com
 
 Network:
-10.x.x.x/24
+10.20.30.0/24
 
 Machines:
-golden-dc-01 (domain controller)
-golden-cl-01 (domain client)
+golden-dc-01 / 10.20.30.40 (domain controller)
+golden-cl-01 / 10.20.30.42 (domain client)
 
 Users:
 Adminsitartor (domain admin)
