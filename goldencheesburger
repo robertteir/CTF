@@ -96,7 +96,7 @@ New-Item -Path 'C:\temp\cheez.ps1' -ItemType File
 
 $action = New-ScheduledTaskAction -Execute 'Powershell.exe' -Argument '-NoProfile -WindowStyle Hidden -command "c:\temp\cheez.ps1"'
 $trigger = New-ScheduledTaskTrigger -Once -At 7am -RepetitionDuration (New-TimeSpan -Days 1) -RepetitionInterval (New-TimeSpan -Minutes 1)
-Register-ScheduledTask -Action $action -Trigger $trigger -TaskName "Chees" -Description "Cheez burger delivery"
+Register-ScheduledTask -Action $action -Trigger $trigger -TaskName "Cheez" -Description "Cheez burger delivery" -User "$env:USERDOMAIN\$env:USERNAME" -Password '*****'
 
 Add-LocalGroupMember -Group "Remote Desktop Users" "goldencheez\Domain Users"
 
