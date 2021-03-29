@@ -5,8 +5,9 @@ Network:
 10.20.30.0/24
 
 Machines:
-golden-dc-01 / 10.20.30.40 (domain controller)
-golden-cl-01 / 10.20.30.42 (domain client)
+golden-dc-01 / 10.20.30.40 / 62.181.196.215:2222 (domain controller)
+golden-cl-01 / 10.20.30.42 / 62.181.196.215:2223 (domain client)
+golden-cl-02 / 10.20.30.43 / 62.181.196.215:2224 (domain client)
 
 Users:
 Adminsitartor (domain admin)
@@ -21,19 +22,11 @@ WinRM
 Tools:
 Mimikazt
 RDP
-PsExec
 
 Goal:
 Local PrivEsc
 Domain PrivEsc
 Golden Ticket
-
-Extras:
-Pass-the-ticket
-Silver Ticket
-Skeleton Key
-
-############## Setup ##############
 
 Scenario:
 1) Gain access as user
@@ -42,13 +35,6 @@ Scenario:
 4) Dump krbtgt NTLM hash
 5) Issue ticket for Administrator
 6) Brows fileshare on golden-dc-01
-
-ToDo:
-Deploy Network
-Deploy machines
-Right script to deploy domain
-Right script to deploy client
-Preppe demo
 
 Deploy domain:
 Add-WindowsFeature AD-Domain-Services
