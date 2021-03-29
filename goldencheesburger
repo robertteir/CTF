@@ -10,7 +10,7 @@ golden-cl-01 / 10.20.30.42 / 62.181.196.215:2223 (domain client)
 golden-cl-02 / 10.20.30.43 / 62.181.196.215:2224 (domain client)
 
 Users:
-Adminsitartor (domain admin)
+Administrator (domain admin)
 admin (domain admin)
 user (domain user)
 Administrator (local golden-cl-01)
@@ -21,7 +21,7 @@ WinRM
 
 Tools:
 Mimikazt
-RDP
+Mstsc
 
 Goal:
 Local PrivEsc
