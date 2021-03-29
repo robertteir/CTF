@@ -78,7 +78,7 @@ Set-MpPreference -DisableIntrusionPreventionSystem $true -DisableIOAVProtection 
 Deploy client:
 Add-computer –domainname "goldencheezburger.com" -restart
 
-## Resrart ##
+## Restart ##
 
 Set-ExecutionPolicy unrestricted -Scope LocalMachine
 
@@ -119,4 +119,5 @@ klist
 whoami
 dir \\golden-dc-01\c$
 
-
+Get-WindowsFeature –Name RSAT*
+ADD-WindowsFeature RSAT-Role-Tools
