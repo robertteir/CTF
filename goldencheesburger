@@ -90,14 +90,13 @@ Add-computer –domainname "goldencheezburger.com" -restart
 ## Resrart ##
 
 New-Item -Path 'C:\temp' -ItemType Directory
-New-Item -Path 'C:\temp\chees.ps1' -ItemType File
+New-Item -Path 'C:\temp\cheez.ps1' -ItemType File
 
-$action = New-ScheduledTaskAction -Execute 'Powershell.exe' -Argument '-NoProfile -WindowStyle Hidden -command "c:\temp\chees.ps1"'
+$action = New-ScheduledTaskAction -Execute 'Powershell.exe' -Argument '-NoProfile -WindowStyle Hidden -command "c:\temp\cheez.ps1"'
 $trigger = New-ScheduledTaskTrigger -Once -At 7am -RepetitionDuration (New-TimeSpan -Days 1) -RepetitionInterval (New-TimeSpan -Minutes 1)
-Register-ScheduledTask -Action $action -Trigger $trigger -TaskName "Chees" -Description "Chees burger delivery"
+Register-ScheduledTask -Action $action -Trigger $trigger -TaskName "Chees" -Description "Cheez burger delivery"
 
-Add-LocalGroupMember -Group "Administrators" "goldencheesburger\Domain Admins"
-Add-LocalGroupMember -Group "Remote Desktop Users" "goldencheesburger\Domain Users"
+Add-LocalGroupMember -Group "Remote Desktop Users" "goldencheez\Domain Users"
 
 Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 Set-MpPreference -DisableIntrusionPreventionSystem $true -DisableIOAVProtection $true -DisableRealtimeMonitoring $true -DisableScriptScanning $true -EnableControlledFolderAccess Disabled -EnableNetworkProtection AuditMode -Force -MAPSReporting Disabled -SubmitSamplesConsent NeverSend
