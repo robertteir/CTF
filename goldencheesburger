@@ -89,6 +89,8 @@ Add-computer –domainname "goldencheezburger.com" -restart
 
 ## Resrart ##
 
+Set-ExecutionPolicy unrestricted -Scope LocalMachine
+
 New-Item -Path 'C:\temp' -ItemType Directory
 New-Item -Path 'C:\temp\cheez.ps1' -ItemType File
 
