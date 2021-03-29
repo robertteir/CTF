@@ -60,36 +60,27 @@ whoami
 dir \\golden-dc-01\c$
 
 Deploy domain:
+Add-WindowsFeature AD-Domain-Services
 
 Install-ADDSForest `
 -DomainName "goldencheezburger.com" `
--CreateDnsDelegation:$false ` 
--DatabasePath "C:\Windows\NTDS" ` 
--DomainMode "7" ` 
--DomainNetbiosName "goldencheezburger" ` 
--ForestMode "7" ` 
--InstallDns:$true ` 
--LogPath "C:\Windows\NTDS" ` 
--NoRebootOnCompletion:$True ` 
--SysvolPath "C:\Windows\SYSVOL" ` 
+-CreateDnsDelegation:$false `
+-DatabasePath "C:\Windows\NTDS" `
+-DomainMode "7" `
+-DomainNetbiosName "goldencheez" `
+-ForestMode "7" `
+-InstallDns:$true `
+-LogPath "C:\Windows\NTDS" `
+-NoRebootOnCompletion:$True `
+-SysvolPath "C:\Windows\SYSVOL" `
 -Force:$true
 
 Get-Service adws,kdc,netlogon,dns
 
-New-ADUser -Name "admin" `
--PasswordNeverExpires $true `
--AccountPassword "***********" `
--PasswordNeverExpires $true
-
-New-ADUser -Name "user" `
--PasswordNeverExpires $true `
--AccountPassword "***********" `
--PasswordNeverExpires $true
-
-Add-ADGroupMember -Identity "goldencheezburger\Domain Admins" -Members admin
-
+New-ADUser -Name "admin" -PasswordNeverExpires $true  -AccountPassword (ConvertTo-SecureString -AsPlainText -String '****' -Force)
+New-ADUser -Name "user" -PasswordNeverExpires $true -AccountPassword (ConvertTo-SecureString -AsPlainText -String '****' -Force)
+Add-ADGroupMember -Identity "Domain Admins" -Members admin
 New-ADComputer -Name "golden-cl-01" -SamAccountName "golden-cl-01"
-
 Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 Set-MpPreference -DisableIntrusionPreventionSystem $true -DisableIOAVProtection $true -DisableRealtimeMonitoring $true -DisableScriptScanning $true -EnableControlledFolderAccess Disabled -EnableNetworkProtection AuditMode -Force -MAPSReporting Disabled -SubmitSamplesConsent NeverSend
 
