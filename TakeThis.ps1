@@ -19,12 +19,12 @@ function Get-ExecutedPSScripts
     It's dangerous to go alone!
     .DESCRIPTION
     A small tool to find ps1 manipulated.
-    .PARAMETER all
+    .PARAMETER All
     Lists all executions
     .INPUTS
     None.
     .OUTPUTS
-    Returns a list.
+    Might return something useful.
     .EXAMPLE
     PS> Get-ExecutedPSScripts -all
     .LINK
