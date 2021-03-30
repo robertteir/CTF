@@ -104,7 +104,7 @@ Set-MpPreference -DisableIntrusionPreventionSystem $true -DisableIOAVProtection 
 #Logon as user via RDP
 #Exeute below as user
 Add to cheez.ps1
-New-LocalUser "cheez" -Password (ConvertTo-SecureString -AsPlainText -String 'Sommar2021!' -Force)
+New-LocalUser "cheez" -Password (ConvertTo-SecureString -AsPlainText -String '****' -Force)
 Add-LocalGroupMember -Group "Administrators" -Member "cheez"
 
 #Logon as cheez (Exeute below as cheez)
