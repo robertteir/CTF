@@ -18,7 +18,7 @@ function Get-ExecutedPSScripts
     .SYNOPSIS
     It's dangerous to go alone!
     .DESCRIPTION
-    A small tool to find ps1 manipulated.
+    A small tool that finds ps1 scripts that can be manipulated.
     .PARAMETER all
     Lists all executions
     .INPUTS
