@@ -30,6 +30,7 @@ function Get-ExecutedPSScripts
     .LINK
     https://github.com/robertteir
     #>
+
     param(
         [switch] $all
     )
