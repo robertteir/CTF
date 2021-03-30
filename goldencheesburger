@@ -38,6 +38,9 @@ Golden Ticket
 6) Brows fileshare on golden-dc-01
 
 ## Deploy domain ##
+#Set IP address
+New-NetIPAddress -InterfaceIndex (Get-NetAdapter).ifIndex -IPAddress 10.20.30.40 -PrefixLength 24 -DefaultGateway 10.20.30.1
+
 #Install domain services
 Add-WindowsFeature AD-Domain-Services
 
@@ -63,6 +66,10 @@ Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 Set-MpPreference -DisableIntrusionPreventionSystem $true -DisableIOAVProtection $true -DisableRealtimeMonitoring $true -DisableScriptScanning $true -EnableControlledFolderAccess Disabled -EnableNetworkProtection AuditMode -Force -MAPSReporting Disabled -SubmitSamplesConsent NeverSend
 
 ## Deploy client ##
+#Set IP address
+New-NetIPAddress -InterfaceIndex (Get-NetAdapter).ifIndex -IPAddress 10.20.30.42 -PrefixLength 24 -DefaultGateway 10.20.30.1
+Set-DnsClientServerAddress -InterfaceIndex (Get-NetAdapter).ifIndex -ServerAddresses ("10.20.30.40")
+
 #Add client to domain
 Add-computer –domainname "goldencheezburger.com" -restart
 
