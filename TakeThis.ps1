@@ -16,28 +16,36 @@ $results = @()
 
 $events= Get-WinEvent -FilterHashTable @{ LogName = "Windows PowerShell"; ID = 400;} | Where-Object {$_.message -like "*.ps1*"}
 
-foreach($event in $events)
-{
-   if($event.Message.ToString().replace("`t", '').Trim() -match '([ ]|=)[A-Za-z]:\\.*\.ps1')
-	{
+foreach($event in $events) {
+   if($event.Message.ToString().replace("`t", '').Trim() -match '([ ]|=)[A-Za-z]:\\.*\.ps1') {
         $values = [regex]::split($Matches[0], '(-.*[ ])')
 
         foreach ($value in $values) {
-            if($value -match '[A-Za-z]:\\.*\.ps1')
-            {
+            if($value -match '[A-Za-z]:\\.*\.ps1') {
                 $file = $Matches[0]
-                $can_read = $true
-                $can_write = $true
-                if(Test-Path $file)
-                {
-                    Try {
-                        [io.file]::OpenWrite($file).close() 
-                    } Catch {
-                        $can_write = $false
-                    } 
+                $acl = $null
+                $can_read = $null
+                $can_write = $null
+
+                if($results.FilePath -notcontains $file) {
+                    $can_read = $true
+                    $can_write = $true
+                    if(Test-Path $file)
+                    {
+                        $acl = (Get-Acl $file).AccessToString.Replace("`n",";")
+                        Try {
+                            [io.file]::OpenWrite($file).close() 
+                        } Catch {
+                            $can_write = $false
+                        } 
+                    }
+                    else {
+                        $can_read = $false
+                    }
                 }
                 else {
-                    $can_read = $false
+                    $can_read = $null
+                    $can_write = $null
                 }
 
                 $result = [PSCustomObject]@{
@@ -45,6 +53,7 @@ foreach($event in $events)
                     FilePath = $file
                     CanRead = $can_read
                     CanWrite = $can_write
+                    Acl = $acl
                 }
                 $results += $result
             }   
