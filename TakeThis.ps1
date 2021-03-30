@@ -12,53 +12,68 @@ Write-host "   |_|\__,_|_|\_\___|  \__|_| |_|_|___/                             
 Write-host "                                          -PoC 2021-03-30   ""you know a tool is great when it has an ascii-art header""  "
                                                                                                                           
 
-$results = @()
+function Get-ExecutedPSScripts
+{
+    param(
+        [switch] $all
+    )
 
-$events= Get-WinEvent -FilterHashTable @{ LogName = "Windows PowerShell"; ID = 400;} | Where-Object {$_.message -like "*.ps1*"}
+    $results = @()
 
-foreach($event in $events) {
-   if($event.Message.ToString().replace("`t", '').Trim() -match '([ ]|=)[A-Za-z]:\\.*\.ps1') {
-        $values = [regex]::split($Matches[0], '(-.*[ ])')
+    $events= Get-WinEvent -FilterHashTable @{ LogName = "Windows PowerShell"; ID = 400;} | Where-Object {$_.message -like "*.ps1*"}
 
-        foreach ($value in $values) {
-            if($value -match '[A-Za-z]:\\.*\.ps1') {
-                $file = $Matches[0]
-                $acl = $null
-                $can_read = $null
-                $can_write = $null
+    foreach($event in $events) {
+    if($event.Message.ToString().replace("`t", '').Trim() -match '([ ]|=)[A-Za-z]:\\.*\.ps1') {
+            $values = [regex]::split($Matches[0], '(-.*[ ])')
 
-                if($results.FilePath -notcontains $file) {
-                    $can_read = $true
-                    $can_write = $true
-                    if(Test-Path $file)
-                    {
-                        $acl = (Get-Acl $file).AccessToString.Replace("`n",";")
-                        Try {
-                            [io.file]::OpenWrite($file).close() 
-                        } Catch {
-                            $can_write = $false
-                        } 
-                    }
-                    else {
-                        $can_read = $false
-                    }
-                }
-                else {
+            foreach ($value in $values) {
+                if($value -match '[A-Za-z]:\\.*\.ps1') {
+                    $file = $Matches[0]
+                    $acl = $null
                     $can_read = $null
                     $can_write = $null
-                }
 
-                $result = [PSCustomObject]@{
-                    DateTime = $event.TimeCreated
-                    FilePath = $file
-                    CanRead = $can_read
-                    CanWrite = $can_write
-                    Acl = $acl
-                }
-                $results += $result
-            }   
+                    if($results.FilePath -notcontains $file) {
+                        $can_read = $true
+                        $can_write = $true
+                        if(Test-Path $file)
+                        {
+                            $acl = (Get-Acl $file).AccessToString.Replace("`n",";")
+                            Try {
+                                [io.file]::OpenWrite($file).close() 
+                            } Catch {
+                                $can_write = $false
+                            } 
+                        }
+                        else {
+                            $can_read = $false
+                        }
+                    }
+                    ElseIf ($all) {
+                        $can_read = $null
+                        $can_write = $null
+                    }
+                    else {
+                        continue
+                    }
+
+                    $result = [PSCustomObject]@{
+                        DateTime = $event.TimeCreated
+                        FilePath = $file
+                        CanRead = $can_read
+                        CanWrite = $can_write
+                        Acl = $acl
+                    }
+                    $results += $result
+                }   
+            }
         }
-	}
-}
+    }
 
-$results | Format-Table
+    $defaultDisplaySet = 'DateTime','FilePath','CanWrite'
+    $defaultDisplayPropertySet = New-Object System.Management.Automation.PSPropertySet('DefaultDisplayPropertySet',[string[]]$defaultDisplaySet)
+    $PSStandardMembers = [System.Management.Automation.PSMemberInfo[]]@($defaultDisplayPropertySet)
+    $results | Add-Member MemberSet PSStandardMembers $PSStandardMembers
+
+    return $results
+}
