@@ -32,9 +32,9 @@ Golden Ticket
 #Scenario
 1) Gain access as user
 2) Local PrivEsc via schedueld task running as golden-cl-01\Administrator
-3) Domain PrivEsc via loggd on user goldencheezburger\
+3) Domain PrivEsc via loggd on user goldencheezburger\admin (Pass-the-Ticket)
 4) Dump krbtgt NTLM hash
-5) Issue ticket for Administrator
+5) Issue ticket for Administrator (Golden ticket)
 6) Brows fileshare on golden-dc-01
 
 ## Deploy domain ##
