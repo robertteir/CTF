@@ -6,9 +6,9 @@ goldencheezburger.com
 10.20.30.0/24
 
 #Machines
-golden-dc-01 / 10.20.30.40 / 62.181.196.215:2222 (domain controller)
-golden-cl-01 / 10.20.30.42 / 62.181.196.215:2223 (domain client)
-golden-cl-02 / 10.20.30.43 / 62.181.196.215:2224 (domain client)
+golden-dc-01 / 10.20.30.40 / [public_ip]:2222 (domain controller)
+golden-cl-01 / 10.20.30.42 / [public_ip]:2223 (domain client)
+golden-cl-02 / 10.20.30.43 / [public_ip]:2224 (domain client)
 
 #Users
 Administrator (domain admin)
