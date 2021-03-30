@@ -18,7 +18,7 @@ function Get-ExecutedPSScripts
     .SYNOPSIS
     It's dangerous to go alone!
     .DESCRIPTION
-    A small tool that finds ps1 scripts that can be manipulated.
+    A small tool to find ps1 manipulated.
     .PARAMETER all
     Lists all executions
     .INPUTS
@@ -30,9 +30,8 @@ function Get-ExecutedPSScripts
     .LINK
     https://github.com/robertteir
     #>
-
     param(
-        [switch] $all
+        [switch] $All
     )
     
     $results = @()
@@ -40,52 +39,52 @@ function Get-ExecutedPSScripts
     $events= Get-WinEvent -FilterHashTable @{ LogName = "Windows PowerShell"; ID = 400;} | Where-Object {$_.message -like "*.ps1*"}
 
     foreach($event in $events) {
-    if($event.Message.ToString().replace("`t", '').Trim() -match '([ ]|=)[A-Za-z]:\\.*\.ps1') {
-            $values = [regex]::split($Matches[0], '(-.*[ ])')
+    if($event.Message.ToString().replace("`t", '').Trim() -match '\b[A-Za-z]:\\.*\.ps1') {
+        $values = [regex]::split($Matches[0], '(-.*[ ])')
 
-            foreach ($value in $values) {
-                if($value -match '[A-Za-z]:\\.*\.ps1') {
-                    $file = $Matches[0]
-                    $acl = $null
-                    $can_read = $null
-                    $can_write = $null
+        foreach ($value in $values) {
+            if($value -match '^[A-Za-z]:\\.*\.ps1') {
+                $file = $Matches[0]
+                $access = $null
+                $can_read = $null
+                $can_write = $null
 
-                    if($results.FilePath -notcontains $file) {
-                        $can_read = $true
-                        $can_write = $true
-                        if(Test-Path $file)
-                        {
-                            $acl = (Get-Acl $file).AccessToString.Replace("`n",";")
-                            Try {
-                                [io.file]::OpenWrite($file).close() 
-                            } Catch {
-                                $can_write = $false
-                            } 
-                        }
-                        else {
-                            $can_read = $false
-                        }
-                    }
-                    ElseIf ($all) {
-                        $can_read = $null
-                        $can_write = $null
+                if($results.FilePath -notcontains $file) {
+                    $can_read = $true
+                    $can_write = $true
+                    if(Test-Path $file)
+                    {
+                        $access = (Get-Acl $file).AccessToString.Replace("`n",";")
+                        Try {
+                            [io.file]::OpenWrite($file).close() 
+                        } Catch {
+                            $can_write = $false
+                        } 
                     }
                     else {
-                        continue
+                        $can_read = $false
                     }
+                }
+                ElseIf ($all) {
+                    $can_read = $null
+                    $can_write = $null
+                }
+                else {
+                    continue
+                }
 
-                    $result = [PSCustomObject]@{
-                        DateTime = $event.TimeCreated
-                        FilePath = $file
-                        CanRead = $can_read
-                        CanWrite = $can_write
-                        Acl = $acl
-                    }
-                    $results += $result
-                }   
-            }
+                $result = [PSCustomObject]@{
+                    DateTime = $event.TimeCreated
+                    FilePath = $file
+                    CanRead = $can_read
+                    CanWrite = $can_write
+                    Access  = $access
+                }
+                $results += $result
+            }   
         }
     }
+}
 
     $defaultDisplaySet = 'DateTime','FilePath','CanWrite'
     $defaultDisplayPropertySet = New-Object System.Management.Automation.PSPropertySet('DefaultDisplayPropertySet',[string[]]$defaultDisplaySet)
