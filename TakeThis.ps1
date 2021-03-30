@@ -14,10 +14,26 @@ Write-host "                                          -PoC 2021-03-30   ""you kn
 
 function Get-ExecutedPSScripts
 {
+    <#
+    .SYNOPSIS
+    It's dangerous to go alone!
+    .DESCRIPTION
+    A small tool to find ps1 manipulated.
+    .PARAMETER all
+    Lists all executions
+    .INPUTS
+    None.
+    .OUTPUTS
+    Returns a list.
+    .EXAMPLE
+    PS> Get-ExecutedPSScripts -all
+    .LINK
+    https://github.com/robertteir
+    #>
     param(
         [switch] $all
     )
-
+    
     $results = @()
 
     $events= Get-WinEvent -FilterHashTable @{ LogName = "Windows PowerShell"; ID = 400;} | Where-Object {$_.message -like "*.ps1*"}
