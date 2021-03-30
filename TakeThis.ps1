@@ -43,7 +43,7 @@ function Get-ExecutedPSScripts
         $values = [regex]::split($Matches[0], '(-.*[ ])')
 
         foreach ($value in $values) {
-            if($value -match '^[A-Za-z]:\\.*\.ps1') {
+            if($value -match '[A-Za-z]:\\.*\.ps1') {
                 $file = $Matches[0]
                 $access = $null
                 $can_read = $null
