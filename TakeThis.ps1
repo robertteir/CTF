@@ -10,20 +10,19 @@ Write-host "   | |/ _' | |/ / _ \ | __| '_ \| / __|                             
 Write-host "   | | (_| |   |  __/ | |_| | | | \__ \                                                                                   "
 Write-host "   |_|\__,_|_|\_\___|  \__|_| |_|_|___/                                                                                   "
 Write-host "                                          -PoC 2021-03-30   ""you know a tool is great when it has an ascii-art header""  "
-                                                                                                                          
 
 function Get-ExecutedPSScripts {
     <#
     .SYNOPSIS
-    It's dangerous to go alone!
+    It's dangerous to go alone! Take this.
     .DESCRIPTION
-    A small tool to find ps1 manipulated.
+    A small tool to find ps1 scripts that can be manipulated.
     .PARAMETER all
-    Lists all executions
+    Lists all executions.
     .INPUTS
     None.
     .OUTPUTS
-    Returns a list.
+    Might return something useful, try poking it with a stick.
     .EXAMPLE
     PS> Get-ExecutedPSScripts -all
     .LINK
@@ -43,6 +42,7 @@ function Get-ExecutedPSScripts {
                 if($value -match '[A-Za-z]:\\.*\.ps1') {
                     $file = $Matches[0]
                     $access = $null
+                    $owner = $null
                     $can_read = $null
                     $can_write = $null
                     if($results.FilePath -notcontains $file) {
@@ -50,7 +50,9 @@ function Get-ExecutedPSScripts {
                         $can_write = $true
                         if(Test-Path $file)
                         {
-                            $access = (Get-Acl $file).AccessToString.Replace("`n",";")
+                            $acl = Get-Acl $file
+                            $access = $acl.AccessToString.Replace("`n",";")
+                            $owner = $acl.Owner
                             Try {
                                 [io.file]::OpenWrite($file).close() 
                             } Catch {
@@ -74,6 +76,7 @@ function Get-ExecutedPSScripts {
                         CanRead = $can_read
                         CanWrite = $can_write
                         Access  = $access
+                        Owner = $owner
                     }
                     $results += $result
                 }   
