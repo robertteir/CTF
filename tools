@@ -1,0 +1,45 @@
+#Kali Linux: geared towards various information security tasks
+https://www.kali.org/
+
+#ParrotOS: Linux distribution based on Debian and designed with Security and Privacy in mind
+https://www.sec.org/
+
+#Dependency Walker: A free utility that scans any 32-bit or 64-bit Windows module (exe, dll, ocx, sys, etc.) and builds a hierarchical tree diagram of all dependent modules.
+https://www.dependencywalker.com/
+
+#Mimikatz: Extract plaintexts passwords, hash, PIN code and kerberos tickets from memory.
+https://github.com/gentilkiwi/mimikatz
+
+#Covenant: A .NET command and control framework
+https://github.com/cobbr/Covenant
+
+#Impacket: A collection of Python classes for working with network protocols.
+https://github.com/SecureAuthCorp/impacket
+
+#Kerbrute: A tool to quickly bruteforce and enumerate valid Active Directory accounts through Kerberos Pre-Authentication
+https://github.com/ropnop/kerbrute
+
+#Nmap: Utility for network discovery and security auditing.
+https://nmap.org/
+
+#Enum4linux: A Linux alternative to enum.exe for enumerating data from Windows and Samba hosts.
+https://tools.kali.org/information-gathering/enum4linux
+
+#Hashcat: Advanced password recovery
+https://github.com/hashcat/hashcat
+
+#John: Advanced password recovery
+https://tools.kali.org/password-attacks/john
+
+#BloodHound: Uses graph theory to reveal the hidden and often unintended relationships within an Active Directory environment.
+https://github.com/BloodHoundAD/BloodHound
+https://github.com/fox-it/BloodHound.py
+
+#SMBMap: Allows users to enumerate samba share drives across an entire domain.
+https://github.com/ShawnDEvans/smbmap
+
+#Evil-winrm: WinRM shell for hacking/pentesting.
+https://github.com/Hackplayers/evil-winrm
+
+#Takethis: A collection of powershell tools for PrivEsc and other things. 
+https://github.com/robertteir/TakeThis
